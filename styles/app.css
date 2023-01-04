@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply antialiased;
+  }
+  label {
+    @apply flex flex-col text-sm leading-6;
+  }
+  input {
+    @apply flex border border-gray-200 rounded p-2;
+  }
+  button {
+    @apply font-bold rounded p-2 duration-300 hover:brightness-110;
+  }
+  pre {
+    @apply whitespace-pre-wrap break-all;
+  }
+  .nav-link {
+    @apply m-0 font-normal text-xs rounded-lg px-3 py-2 text-white no-underline hover:bg-red-400/30 sm:text-sm;
+  }
+  .nav-link.active {
+    @apply bg-red-400/40 font-bold;
+  }
+}

@@ -1,4 +1,6 @@
-# Welcome to Remix!
+# FurReal
+
+A daily picture application for pets similar to BeReal.
 
 - [Remix Docs](https://remix.run/docs)
 
