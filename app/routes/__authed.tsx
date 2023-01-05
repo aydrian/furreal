@@ -5,6 +5,7 @@ import { requireUserId } from "~/utils/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireUserId(request);
+  return null;
 };
 
 export default function AuthedPages() {

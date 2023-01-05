@@ -5,7 +5,7 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as Z from "zod";
 
 import { login, createUserSession, getUserId } from "~/utils/session.server";
-import { validationAcation } from "~/utils/utils";
+import { validateAction } from "~/utils/utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -32,7 +32,7 @@ type ActionData = {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const { formData, errors } = await validationAcation<ActionInput>({
+  const { formData, errors } = await validateAction<ActionInput>({
     request,
     schema
   });
