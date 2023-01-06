@@ -25,7 +25,7 @@ const schema = Z.object({
     6,
     "Password must be at least 6 characters long"
   ),
-  redirectTo: Z.string().default("/feed"),
+  redirectTo: Z.string().default("/profile"),
   username: Z.string({ required_error: "Username is required" })
 }).superRefine(({ confirmPassword, password }, ctx) => {
   if (confirmPassword !== password) {
