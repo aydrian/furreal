@@ -1,5 +1,5 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import type { ActionErrors } from "~/utils/utils";
+import type { ActionData } from "~/utils/types.server";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as Z from "zod";
@@ -24,12 +24,6 @@ const schema = Z.object({
 });
 
 type ActionInput = Z.TypeOf<typeof schema>;
-
-type ActionData = {
-  formError?: string;
-  fieldErrors?: ActionErrors<ActionInput>;
-  fields?: ActionInput;
-};
 
 export const action: ActionFunction = async ({ request }) => {
   const { formData, errors } = await validateAction<ActionInput>({
@@ -57,7 +51,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Index() {
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData() as ActionData<ActionInput>;
   const [searchParams] = useSearchParams();
   return (
     <main className="grid lg:grid-rows-2 gap-4 w-screen min-h-screen">

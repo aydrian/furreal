@@ -1,6 +1,5 @@
 import type { ZodError, ZodSchema } from "zod";
-
-export type ActionErrors<T> = Partial<Record<keyof T, string>>;
+import type { ActionErrors } from "./types.server";
 
 export async function validateAction<ActionInput>({
   request,
