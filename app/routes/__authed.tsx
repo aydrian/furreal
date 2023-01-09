@@ -11,6 +11,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function AuthedPages() {
   return (
     <main>
+      <form method="post" action="/logout" className="m-0">
+        <button type="submit" className="text-white bg-teal-500">
+          Logout
+        </button>
+      </form>
       <Outlet />
     </main>
   );

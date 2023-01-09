@@ -5,8 +5,8 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as Z from "zod";
 
 import { validateAction } from "~/utils/utils";
-import { db } from "~/utils/db.server";
 import { createUserSession, getUserId, register } from "~/utils/session.server";
+import { checkUserExists } from "~/utils/users.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { email, password, redirectTo, username } = formData;
 
-  const userExists = await db.user.findFirst({ where: { email } });
+  const userExists = await checkUserExists(email);
   if (userExists) {
     return json(
       {

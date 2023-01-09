@@ -4,25 +4,15 @@ import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getUserId } from "~/utils/session.server";
-import { db } from "~/utils/db.server";
+import { getUserProfile } from "~/utils/users.server";
 
 import { UserCircle } from "~/components/user-circle";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const id = await getUserId(request);
-  invariant(id, "User ID should be a string.");
+  const userId = await getUserId(request);
+  invariant(userId, "User ID should be a string.");
 
-  const user = await db.user.findUnique({
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      fullName: true,
-      bio: true,
-      location: true
-    },
-    where: { id }
-  });
+  const user = await getUserProfile(userId);
 
   return json({ user });
 };

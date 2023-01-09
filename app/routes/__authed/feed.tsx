@@ -39,7 +39,11 @@ export default function Feed() {
       ) : (
         <div>
           <p>Post a Real to see today's feed.</p>
-          <button type="button" onClick={() => navigate(`post`)}>
+          <button
+            type="button"
+            className="text-white bg-teal-500"
+            onClick={() => navigate(`post`)}
+          >
             Be FurReal
           </button>
         </div>

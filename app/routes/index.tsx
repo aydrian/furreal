@@ -7,6 +7,8 @@ import * as Z from "zod";
 import { login, createUserSession, getUserId } from "~/utils/session.server";
 import { validateAction } from "~/utils/utils";
 
+import { FormField } from "~/components/form-field";
+
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
   if (userId) {
@@ -95,42 +97,22 @@ export default function Index() {
               name="redirectTo"
               value={searchParams.get("redirectTo") ?? undefined}
             />
-            <label>
-              Email{" "}
-              <input
-                type="email"
-                name="email"
-                required
-                defaultValue={actionData?.fieldErrors?.email}
-                aria-errormessage={
-                  actionData?.fieldErrors?.email ? "email-error" : undefined
-                }
-              />
-            </label>
-            {actionData?.fieldErrors?.email ? (
-              <div className="pt-1 text-red-700">
-                {actionData.fieldErrors.email}
-              </div>
-            ) : undefined}
-            <label>
-              Password{" "}
-              <input
-                type="password"
-                name="password"
-                required
-                defaultValue={actionData?.fields?.password}
-                aria-errormessage={
-                  actionData?.fieldErrors?.password
-                    ? "password-error"
-                    : undefined
-                }
-              />
-            </label>
-            {actionData?.fieldErrors?.password ? (
-              <div className="pt-1 text-red-700">
-                {actionData.fieldErrors.password}
-              </div>
-            ) : undefined}
+            <FormField
+              htmlFor="email"
+              label="Email"
+              type="email"
+              required
+              defaultValue={actionData?.fields?.email}
+              error={actionData?.fieldErrors?.email}
+            />
+            <FormField
+              htmlFor="password"
+              label="Password"
+              type="password"
+              required
+              defaultValue={actionData?.fields?.password}
+              error={actionData?.fieldErrors?.password}
+            />
             {actionData?.formError ? (
               <div className="pt-1 text-red-700">{actionData.formError}</div>
             ) : undefined}

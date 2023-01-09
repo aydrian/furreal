@@ -1,18 +1,8 @@
+import type { LoginForm, SignUpForm } from "./types.server";
 import bcrypt from "bcryptjs";
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
 import { db } from "./db.server";
-
-type LoginForm = {
-  email: string;
-  password: string;
-};
-
-type SignUpForm = {
-  email: string;
-  password: string;
-  username: string;
-};
 
 export async function register({ email, password, username }: SignUpForm) {
   const passwordHash = await bcrypt.hash(password, 10);
