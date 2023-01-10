@@ -168,11 +168,11 @@ export default function SignUp() {
           <Link
             className="text-blue-500 underline"
             to={{
-              pathname: "/login",
+              pathname: "/",
               search: searchParams.toString()
             }}
           >
-            Sign up
+            Log in
           </Link>
         </div>
       </Form>

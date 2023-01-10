@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import type { Real } from "@prisma/client";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
+import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { formatRelative } from "date-fns";
 
@@ -29,6 +29,8 @@ export default function Feed() {
   return (
     <section>
       <Outlet />
+      <Link to="/profile">Profile</Link>
+      <Link to="/friends">Friends</Link>
       <h1>Feed</h1>
       {currentReal ? (
         <div>

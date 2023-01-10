@@ -11,17 +11,32 @@ datasource db {
 }
 
 model User {
-  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String  @unique
-  passwordHash String  @map("password_hash")
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String       @unique
+  passwordHash String       @map("password_hash")
   username     String
-  fullName     String? @map("full_name")
+  fullName     String?      @map("full_name")
   bio          String?
   location     String?
   avatar       String?
   Reals        Real[]
+  FriendsOf    Friendship[] @relation("Friends")
+  Friends      Friendship[] @relation("Users")
 
   @@map("users")
+}
+
+model Friendship {
+  userId    String   @map("user_id") @db.Uuid
+  friendId  String   @map("friend_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  pending   Boolean  @default(true)
+
+  User   User @relation(name: "Users", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Friend User @relation(name: "Friends", fields: [friendId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([userId, friendId])
+  @@map("friendships")
 }
 
 model Real {

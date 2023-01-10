@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "react-router";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getUserId } from "~/utils/session.server";
@@ -21,6 +21,7 @@ export default function Profile() {
   const { user } = useLoaderData();
   return (
     <section>
+      <Link to="/feed">Back</Link>
       <h1>Profile</h1>
       <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
       <p>{user.username}</p>
