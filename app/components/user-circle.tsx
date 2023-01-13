@@ -1,7 +1,7 @@
-import type { User } from "@prisma/client";
+import type { UserProfile } from "~/utils/types.server";
 
 interface props {
-  user: User;
+  user: UserProfile;
   className?: string;
   onClick?: (...args: any) => any;
 }

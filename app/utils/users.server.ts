@@ -1,3 +1,4 @@
+import type { UserProfile } from "./types.server";
 import { db } from "./db.server";
 
 export const checkUserExists = async (email: string) => {
@@ -21,4 +22,8 @@ export const getUserProfile = async (userId: string) => {
     where: { id: userId }
   });
   return profile;
+};
+
+export const updateUserProfile = async (userId: string, data: UserProfile) => {
+  await db.user.update({ data, where: { id: userId } });
 };
