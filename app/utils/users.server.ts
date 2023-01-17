@@ -2,7 +2,7 @@ import type { UserProfile } from "./types.server";
 import { db } from "./db.server";
 
 export const checkUserExists = async (email: string) => {
-  const user = db.user.findUnique({
+  const user = await db.user.findUnique({
     select: { id: true },
     where: { email }
   });
