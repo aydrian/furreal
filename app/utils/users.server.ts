@@ -27,3 +27,34 @@ export const getUserProfile = async (userId: string) => {
 export const updateUserProfile = async (userId: string, data: UserProfile) => {
   await db.user.update({ data, where: { id: userId } });
 };
+
+export const getUserFeed = async (userId: string) => {
+  const now = new Date();
+  const user = await db.user.findUnique({
+    select: {
+      id: true,
+      username: true,
+      fullName: true,
+      Reals: {
+        where: {
+          createdAt: {
+            gte: new Date(
+              `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
+            ),
+            lt: new Date(
+              `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1}`
+            )
+          }
+        }
+      },
+      Friends: {
+        select: { friendId: true },
+        where: {
+          pending: false
+        }
+      }
+    },
+    where: { id: userId }
+  });
+  return user;
+};

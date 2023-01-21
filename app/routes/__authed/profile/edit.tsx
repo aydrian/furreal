@@ -51,45 +51,52 @@ export default function EditProfile() {
   const { user } = useLoaderData<typeof loader>();
   const actionData = useActionData() as ActionData<ActionInput>;
   return (
-    <section>
-      <Link to="../">Cancel</Link>
-      <h2>Edit Profile</h2>
-      {user ? (
-        <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
-      ) : null}
-      <Form method="post">
-        <FormField
-          htmlFor="fullName"
-          label="Full Name"
-          defaultValue={actionData?.fieldErrors?.fullName || user?.fullName}
-          error={actionData?.fieldErrors?.fullName}
-        />
-        <FormField
-          htmlFor="username"
-          label="Username"
-          defaultValue={actionData?.fieldErrors?.username || user?.username}
-          required
-          error={actionData?.fieldErrors?.username}
-        />
-        <FormField
-          htmlFor="bio"
-          label="Bio"
-          defaultValue={actionData?.fieldErrors?.bio || user?.bio}
-          error={actionData?.fieldErrors?.bio}
-        />
-        <FormField
-          htmlFor="location"
-          label="Location"
-          defaultValue={actionData?.fieldErrors?.location || user?.location}
-          error={actionData?.fieldErrors?.location}
-        />
-        {actionData?.formError ? (
-          <div className="pt-1 text-red-700">{actionData.formError}</div>
-        ) : undefined}
-        <button type="submit" name="intent" value="saveProfile">
-          Save
-        </button>
-      </Form>
-    </section>
+    <>
+      <header className="bg-white sticky top-0">
+        <div className="flex justify-between">
+          <Link to="../">Cancel</Link>
+          <h1>Edit Profile</h1>
+          <div>Save</div>
+        </div>
+      </header>
+      <main>
+        {user ? (
+          <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
+        ) : null}
+        <Form method="post">
+          <FormField
+            htmlFor="fullName"
+            label="Full Name"
+            defaultValue={actionData?.fieldErrors?.fullName || user?.fullName}
+            error={actionData?.fieldErrors?.fullName}
+          />
+          <FormField
+            htmlFor="username"
+            label="Username"
+            defaultValue={actionData?.fieldErrors?.username || user?.username}
+            required
+            error={actionData?.fieldErrors?.username}
+          />
+          <FormField
+            htmlFor="bio"
+            label="Bio"
+            defaultValue={actionData?.fieldErrors?.bio || user?.bio}
+            error={actionData?.fieldErrors?.bio}
+          />
+          <FormField
+            htmlFor="location"
+            label="Location"
+            defaultValue={actionData?.fieldErrors?.location || user?.location}
+            error={actionData?.fieldErrors?.location}
+          />
+          {actionData?.formError ? (
+            <div className="pt-1 text-red-700">{actionData.formError}</div>
+          ) : undefined}
+          <button type="submit" name="intent" value="saveProfile">
+            Save
+          </button>
+        </Form>
+      </main>
+    </>
   );
 }

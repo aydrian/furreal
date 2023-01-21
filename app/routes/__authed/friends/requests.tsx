@@ -62,7 +62,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function FriendsRequests() {
   const { friendships } = useLoaderData<typeof loader>();
   return (
-    <div>
+    <section>
       <h2>Friend Requests ({friendships.length})</h2>
       {friendships.length > 0 ? (
         <div>
@@ -93,6 +93,6 @@ export default function FriendsRequests() {
       ) : (
         <div>You have no requests.</div>
       )}
-    </div>
+    </section>
   );
 }
