@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs } from "@remix-run/node";
 import type { ActionData, UserProfile } from "~/utils/types.server";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
@@ -12,11 +12,7 @@ import { getUserId } from "~/utils/session.server";
 import { getUserProfile, updateUserProfile } from "~/utils/users.server";
 import { validateAction } from "~/utils/utils";
 
-type LoaderData = {
-  user: UserProfile;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   invariant(userId, "User ID should be a string.");
   const user = await getUserProfile(userId);
@@ -52,37 +48,39 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function EditProfile() {
-  const { user } = useLoaderData<LoaderData>();
+  const { user } = useLoaderData<typeof loader>();
   const actionData = useActionData() as ActionData<ActionInput>;
   return (
     <section>
       <Link to="../">Cancel</Link>
       <h2>Edit Profile</h2>
-      <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
+      {user ? (
+        <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
+      ) : null}
       <Form method="post">
         <FormField
           htmlFor="fullName"
           label="Full Name"
-          defaultValue={actionData?.fieldErrors?.fullName || user.fullName}
+          defaultValue={actionData?.fieldErrors?.fullName || user?.fullName}
           error={actionData?.fieldErrors?.fullName}
         />
         <FormField
           htmlFor="username"
           label="Username"
-          defaultValue={actionData?.fieldErrors?.username || user.username}
+          defaultValue={actionData?.fieldErrors?.username || user?.username}
           required
           error={actionData?.fieldErrors?.username}
         />
         <FormField
           htmlFor="bio"
           label="Bio"
-          defaultValue={actionData?.fieldErrors?.bio || user.bio}
+          defaultValue={actionData?.fieldErrors?.bio || user?.bio}
           error={actionData?.fieldErrors?.bio}
         />
         <FormField
           htmlFor="location"
           label="Location"
-          defaultValue={actionData?.fieldErrors?.location || user.location}
+          defaultValue={actionData?.fieldErrors?.location || user?.location}
           error={actionData?.fieldErrors?.location}
         />
         {actionData?.formError ? (

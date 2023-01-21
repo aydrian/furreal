@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   invariant(userId, "User ID should not be null");
 
@@ -60,7 +60,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function FriendsRequests() {
-  const { friendships } = useLoaderData();
+  const { friendships } = useLoaderData<typeof loader>();
   return (
     <div>
       <h2>Friend Requests ({friendships.length})</h2>

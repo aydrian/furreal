@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs } from "@remix-run/node";
 import type { ActionData } from "~/utils/types.server";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
@@ -9,7 +9,7 @@ import { validateAction } from "~/utils/utils";
 
 import { FormField } from "~/components/form-field";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   if (userId) {
     return redirect("/feed");

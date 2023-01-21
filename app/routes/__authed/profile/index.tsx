@@ -1,5 +1,4 @@
-import type { LoaderFunction } from "react-router";
-import type { UserProfile } from "~/utils/types.server";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -9,11 +8,7 @@ import { getUserProfile } from "~/utils/users.server";
 
 import { UserCircle } from "~/components/user-circle";
 
-type LoaderData = {
-  user: UserProfile;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   invariant(userId, "User ID should be a string.");
 
@@ -23,28 +18,30 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Profile() {
-  const { user } = useLoaderData<LoaderData>();
+  const { user } = useLoaderData<typeof loader>();
   return (
     <section>
       <Link to="/feed">Back</Link>
       <h1>Profile</h1>
-      <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
+      {user ? (
+        <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
+      ) : null}
       <Link to="./edit">
         <p>
-          {user.fullName && (
+          {user?.fullName && (
             <>
               <span>{user.fullName}</span>
               <br />
             </>
           )}
-          {user.username} <br />
-          {user.bio && (
+          {user?.username} <br />
+          {user?.bio && (
             <>
               <span>{user.bio}</span>
               <br />
             </>
           )}
-          {user.location && (
+          {user?.location && (
             <>
               <span>{user.location}</span>
               <br />

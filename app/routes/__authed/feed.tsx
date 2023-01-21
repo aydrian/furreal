@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import type { Real } from "@prisma/client";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
@@ -10,11 +10,7 @@ import { getCurrentReal } from "~/utils/reals.server";
 
 import { BufferImage } from "~/components/buffer-image";
 
-type LoaderData = {
-  currentReal: Real;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   invariant(userId, "User ID should not be null");
 
@@ -24,7 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Feed() {
-  const { currentReal } = useLoaderData<LoaderData>();
+  const { currentReal } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   return (
     <section>

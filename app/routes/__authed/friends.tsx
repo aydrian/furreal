@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
@@ -12,7 +12,7 @@ import invariant from "tiny-invariant";
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 
-// export const loader: LoaderFunction = async ({ request }) => {
+// export const loader = async ({ request }: LoaderArgs) => {
 //   const userId = await getUserId(request);
 //   invariant(userId, "User ID should not be null");
 
@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (formData.intent === "addFriend") {
     const user = await db.user.findUnique({
       select: { id: true },
-      where: { email: formData.email }
+      where: { email: formData.email as string }
     });
     if (!user) {
       return json(
@@ -58,7 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Friends() {
-  // const { friendships } = useLoaderData();
+  // const { friendships } = useLoaderData<typeof loader>();
   const actionData = useActionData();
   return (
     <section>

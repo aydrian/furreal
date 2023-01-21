@@ -7,14 +7,15 @@
   "author": "Aydrian Howard <aydrian@gmail.com>",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npm run build:css && remix build",
+    "build": "npm run prisma:generate && npm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
+    "prisma:generate": "prisma generate",
     "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@prisma/client": "^4.8.1",
+    "@prisma/client": "^4.9.0",
     "@remix-run/node": "^1.9.0",
     "@remix-run/react": "^1.9.0",
     "@remix-run/vercel": "^1.9.0",
@@ -40,7 +41,7 @@
     "concurrently": "^7.6.0",
     "eslint": "^8.27.0",
     "postcss": "^8.4.20",
-    "prisma": "^4.8.1",
+    "prisma": "^4.9.0",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.8.4"
   },
