@@ -21,7 +21,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
 
   const friendReals = await getCurrentFriendReals(user?.Friends);
-  console.log(friendReals);
 
   return json({ user, friendReals });
 };
@@ -29,8 +28,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function Feed() {
   const { user, friendReals } = useLoaderData<typeof loader>();
   const currentReal = user?.Reals[0];
-  console.log("Current Real", currentReal);
-  console.log("Friend Reals", friendReals);
   const navigate = useNavigate();
   return (
     <>
