@@ -1,4 +1,5 @@
 import type { UserProfile } from "./types.server";
+import { subDays } from "date-fns";
 import { db } from "./db.server";
 
 export const checkUserExists = async (email: string) => {
@@ -10,6 +11,8 @@ export const checkUserExists = async (email: string) => {
 };
 
 export const getUserProfile = async (userId: string) => {
+  const now = new Date();
+  const then = subDays(now, 13);
   const profile = await db.user.findUnique({
     select: {
       id: true,
@@ -17,7 +20,19 @@ export const getUserProfile = async (userId: string) => {
       username: true,
       fullName: true,
       bio: true,
-      location: true
+      location: true,
+      Reals: {
+        where: {
+          createdAt: {
+            gte: new Date(
+              `${then.getFullYear()}-${then.getMonth() + 1}-${then.getDate()}`
+            ),
+            lte: new Date(
+              `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1}`
+            )
+          }
+        }
+      }
     },
     where: { id: userId }
   });
