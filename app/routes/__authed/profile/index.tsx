@@ -1,4 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
+import type { Real } from "@prisma/client";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -8,6 +9,7 @@ import { getUserId } from "~/utils/session.server";
 import { getUserProfile } from "~/utils/users.server";
 
 import { UserCircle } from "~/components/user-circle";
+import { Memories } from "~/components/memories";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -19,14 +21,19 @@ export const loader = async ({ request }: LoaderArgs) => {
   const now = new Date();
   const then = subDays(now, 13);
   const dates = eachDayOfInterval({ start: then, end: now });
-  console.log(dates.length);
 
-  const memories: Array<
-    typeof Reals[0] | { createdAt: Date; caption: string }
-  > = [];
+  const memories: Array<Real> = [];
+  const none: Real = {
+    id: "none",
+    createdAt: now,
+    caption: null,
+    location: null,
+    imgData: Buffer.from(""),
+    userId
+  };
   dates.forEach((date) => {
     const real = Reals.find((real) => isSameDay(real.createdAt, date));
-    memories.push(real || { createdAt: date, caption: "No photo." });
+    memories.push(real || { ...none, createdAt: date });
   });
 
   return json({ user, memories });
@@ -78,15 +85,7 @@ export default function Profile() {
         {memories ? (
           <section>
             <h2>Your Memories</h2>
-            <ul className="grid grid-cols-7">
-              {memories.map((memory) => {
-                return (
-                  <li>
-                    {new Date(memory.createdAt).getDate()}: {memory.caption}
-                  </li>
-                );
-              })}
-            </ul>
+            <Memories memories={memories} />
           </section>
         ) : null}
         <section>

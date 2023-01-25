@@ -73,3 +73,14 @@ export const getUserFeed = async (userId: string) => {
   });
   return user;
 };
+
+export const searchUsers = async (query: string) => {
+  const users = await db.user.findMany({
+    select: { id: true, username: true, fullName: true },
+    where: {
+      OR: [{ username: { contains: query } }, { fullName: { contains: query } }]
+    }
+  });
+
+  return users;
+};

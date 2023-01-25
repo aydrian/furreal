@@ -56,14 +56,23 @@ export default function EditProfile() {
         <div className="flex justify-between">
           <Link to="../">Cancel</Link>
           <h1>Edit Profile</h1>
-          <div>Save</div>
+          <div>
+            <button
+              type="submit"
+              form="editProfile"
+              name="intent"
+              value="saveProfile"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </header>
       <main>
         {user ? (
           <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
         ) : null}
-        <Form method="post">
+        <Form id="editProfile" method="post">
           <FormField
             htmlFor="fullName"
             label="Full Name"
@@ -92,9 +101,6 @@ export default function EditProfile() {
           {actionData?.formError ? (
             <div className="pt-1 text-red-700">{actionData.formError}</div>
           ) : undefined}
-          <button type="submit" name="intent" value="saveProfile">
-            Save
-          </button>
         </Form>
       </main>
     </>
