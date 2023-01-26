@@ -60,13 +60,14 @@ export default function Profile() {
           ) : null}
           <Link to="./edit">
             <p>
-              {user?.fullName && (
+              {user?.fullName} <br />
+              {user?.username} <br />
+              {user?.email && (
                 <>
-                  <span>{user.fullName}</span>
+                  <span>{user.email}</span>
                   <br />
                 </>
               )}
-              {user?.username} <br />
               {user?.bio && (
                 <>
                   <span>{user.bio}</span>

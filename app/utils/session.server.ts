@@ -4,25 +4,25 @@ import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
 import { db } from "./db.server";
 
-export async function register({ email, password, username }: SignUpForm) {
+export async function register({ password, username, fullName }: SignUpForm) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
-    data: { email, passwordHash, username }
+    data: { passwordHash, username, fullName }
   });
-  return { id: user.id, email };
+  return { id: user.id, fullName };
 }
 
-export async function login({ email, password }: LoginForm) {
+export async function login({ username, password }: LoginForm) {
   const user = await db.user.findUnique({
-    select: { id: true, email: true, passwordHash: true, username: true },
-    where: { email }
+    select: { id: true, username: true, passwordHash: true, fullName: true },
+    where: { username }
   });
   if (!user) return null;
 
   const isCorrectPassword = await bcrypt.compare(password, user.passwordHash);
   if (!isCorrectPassword) return null;
 
-  return { id: user.id, username: user.username, email };
+  return { id: user.id, username: user.username, fullName: user.fullName };
 }
 
 const sessionSecret = process.env.SESSION_SECRET;
@@ -78,7 +78,7 @@ export async function getUser(request: Request) {
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
-      select: { id: true, username: true, email: true }
+      select: { id: true, username: true, fullName: true }
     });
     return user;
   } catch {

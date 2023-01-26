@@ -8,6 +8,8 @@ import { validateAction } from "~/utils/utils";
 import { createUserSession, getUserId, register } from "~/utils/session.server";
 import { checkUserExists } from "~/utils/users.server";
 
+import { FormField } from "~/components/form-field";
+
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
   if (userId) {
@@ -17,9 +19,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const schema = Z.object({
-  email: Z.string({ required_error: "Email is required" }).email(
-    "Invalid email"
-  ),
+  fullName: Z.string({ required_error: "Name is required" }),
   password: Z.string().min(6, "Password must be at least 6 characters long"),
   confirmPassword: Z.string().min(
     6,
@@ -49,20 +49,20 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ fieldErrors: errors, fields: formData }, { status: 400 });
   }
 
-  const { email, password, redirectTo, username } = formData;
+  const { fullName, password, redirectTo, username } = formData;
 
-  const userExists = await checkUserExists(email);
+  const userExists = await checkUserExists(username);
   if (userExists) {
     return json(
       {
         fields: formData,
-        formError: `User with email ${email} already exists`
+        formError: `User with username ${username} already exists`
       },
       { status: 400 }
     );
   }
 
-  const user = await register({ email, password, username });
+  const user = await register({ password, username, fullName });
   if (!user) {
     return json(
       {
@@ -87,76 +87,38 @@ export default function SignUp() {
           name="redirectTo"
           value={searchParams.get("redirectTo") ?? undefined}
         />
-        <label>
-          Email{" "}
-          <input
-            type="email"
-            name="email"
-            required
-            defaultValue={actionData?.fieldErrors?.email}
-            aria-errormessage={
-              actionData?.fieldErrors?.email ? "email-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.fieldErrors?.email ? (
-          <div className="pt-1 text-red-700">
-            {actionData.fieldErrors.email}
-          </div>
-        ) : undefined}
-        <label>
-          Password{" "}
-          <input
-            type="password"
-            name="password"
-            required
-            defaultValue={actionData?.fields?.password}
-            aria-errormessage={
-              actionData?.fieldErrors?.password ? "password-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.fieldErrors?.password ? (
-          <div className="pt-1 text-red-700">
-            {actionData.fieldErrors.password}
-          </div>
-        ) : undefined}
-        <label>
-          Confirm Password{" "}
-          <input
-            type="password"
-            name="confirmPassword"
-            required
-            defaultValue={actionData?.fields?.confirmPassword}
-            aria-errormessage={
-              actionData?.fieldErrors?.confirmPassword
-                ? "confirmPassword-error"
-                : undefined
-            }
-          />
-        </label>
-        {actionData?.fieldErrors?.confirmPassword ? (
-          <div className="pt-1 text-red-700">
-            {actionData.fieldErrors.confirmPassword}
-          </div>
-        ) : undefined}
-        <label>
-          Username{" "}
-          <input
-            type="text"
-            name="username"
-            required
-            defaultValue={actionData?.fields?.username}
-            aria-errormessage={
-              actionData?.fieldErrors?.username ? "username-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.fieldErrors?.username ? (
-          <div className="pt-1 text-red-700">
-            {actionData.fieldErrors.username}
-          </div>
-        ) : undefined}
+        <FormField
+          htmlFor="fullName"
+          label="Name"
+          type="text"
+          required
+          defaultValue={actionData?.fields?.fullName}
+          error={actionData?.fieldErrors?.fullName}
+        />
+        <FormField
+          htmlFor="username"
+          label="Username"
+          type="text"
+          required
+          defaultValue={actionData?.fields?.username}
+          error={actionData?.fieldErrors?.username}
+        />
+        <FormField
+          htmlFor="password"
+          label="Password"
+          type="password"
+          required
+          defaultValue={actionData?.fields?.password}
+          error={actionData?.fieldErrors?.password}
+        />
+        <FormField
+          htmlFor="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          required
+          defaultValue={actionData?.fields?.confirmPassword}
+          error={actionData?.fieldErrors?.confirmPassword}
+        />
         {actionData?.formError ? (
           <div className="pt-1 text-red-700">{actionData.formError}</div>
         ) : undefined}

@@ -12,10 +12,10 @@ datasource db {
 
 model User {
   id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String       @unique
+  username     String       @unique
   passwordHash String       @map("password_hash")
-  username     String
-  fullName     String?      @map("full_name")
+  fullName     String       @map("full_name")
+  email        String?
   bio          String?
   location     String?
   avatar       String?

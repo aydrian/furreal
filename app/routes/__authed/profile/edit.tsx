@@ -21,8 +21,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const schema = Z.object({
-  fullName: Z.string().optional(),
+  fullName: Z.string({ required_error: "Name is required" }),
   username: Z.string({ required_error: "Username is required" }),
+  email: Z.string().email("Invalid email").optional(),
   bio: Z.string().optional(),
   location: Z.string().optional()
 });
@@ -84,7 +85,15 @@ export default function EditProfile() {
             label="Username"
             defaultValue={actionData?.fieldErrors?.username || user?.username}
             required
+            disabled
             error={actionData?.fieldErrors?.username}
+          />
+          <FormField
+            htmlFor="email"
+            label="Email"
+            type="email"
+            defaultValue={actionData?.fieldErrors?.email || user?.email}
+            error={actionData?.fieldErrors?.email}
           />
           <FormField
             htmlFor="bio"

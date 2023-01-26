@@ -4,6 +4,7 @@ interface props {
   type?: React.HTMLInputTypeAttribute;
   defaultValue?: any;
   required?: boolean;
+  disabled?: boolean;
   error?: string;
 }
 
@@ -13,6 +14,7 @@ export const FormField: React.FC<props> = ({
   type = "text",
   defaultValue,
   required,
+  disabled,
   error = ""
 }) => {
   return (
@@ -23,6 +25,7 @@ export const FormField: React.FC<props> = ({
         type={type}
         name={htmlFor}
         required={required}
+        disabled={disabled}
         defaultValue={defaultValue}
         aria-errormessage={error ? `${htmlFor}-error` : undefined}
       />

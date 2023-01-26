@@ -1,14 +1,14 @@
 import { Prisma } from "@prisma/client";
 
 export type LoginForm = {
-  email: string;
+  username: string;
   password: string;
 };
 
 export type SignUpForm = {
-  email: string;
   password: string;
   username: string;
+  fullName: string;
 };
 
 export type ActionErrors<T> = Partial<Record<keyof T, string>>;

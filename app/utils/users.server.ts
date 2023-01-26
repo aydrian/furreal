@@ -2,10 +2,10 @@ import type { UserProfile } from "./types.server";
 import { subDays } from "date-fns";
 import { db } from "./db.server";
 
-export const checkUserExists = async (email: string) => {
+export const checkUserExists = async (username: string) => {
   const user = await db.user.findUnique({
     select: { id: true },
-    where: { email }
+    where: { username }
   });
   return Boolean(user);
 };

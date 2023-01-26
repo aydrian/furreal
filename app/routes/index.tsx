@@ -18,9 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const schema = Z.object({
-  email: Z.string({ required_error: "Email is required" }).email(
-    "Invalid email"
-  ),
+  username: Z.string({ required_error: "Username is required" }),
   password: Z.string().min(6, "Password must be at least 6 characters long"),
   redirectTo: Z.string().default("/feed")
 });
@@ -37,9 +35,9 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ fieldErrors: errors, fields: formData }, { status: 400 });
   }
 
-  const { email, password, redirectTo } = formData;
+  const { username, password, redirectTo } = formData;
 
-  const user = await login({ email, password });
+  const user = await login({ username, password });
   if (!user) {
     return json(
       {
@@ -98,12 +96,12 @@ export default function Index() {
               value={searchParams.get("redirectTo") ?? undefined}
             />
             <FormField
-              htmlFor="email"
-              label="Email"
-              type="email"
+              htmlFor="username"
+              label="Username"
+              type="text"
               required
-              defaultValue={actionData?.fields?.email}
-              error={actionData?.fieldErrors?.email}
+              defaultValue={actionData?.fields?.username}
+              error={actionData?.fieldErrors?.username}
             />
             <FormField
               htmlFor="password"
