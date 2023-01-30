@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
+import { UserStack, UserTile } from "~/components/user-stack";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -12,7 +13,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const friendships = await db.friendship.findMany({
     select: {
-      createdAt: true,
       Friend: { select: { id: true, username: true, fullName: true } }
     },
     where: { userId, pending: false }
@@ -62,26 +62,22 @@ export default function FriendsIndex() {
       <h2>My Friends ({friendships.length})</h2>
       {friendships.length > 0 ? (
         <div>
-          <ul>
-            {friendships.map((friendship) => {
-              return (
-                <li key={friendship.Friend.id}>
-                  <Form method="post" action="/friends?index">
-                    <input
-                      type="hidden"
-                      name="friendId"
-                      value={friendship.Friend.id}
-                    />
-                    {friendship.Friend.fullName || "Nameless"} (
-                    {friendship.Friend.username})
-                    <button type="submit" name="intent" value="delFriend">
-                      X
-                    </button>
-                  </Form>
-                </li>
-              );
-            })}
-          </ul>
+          <UserStack>
+            {friendships.map((friendship) => (
+              <UserTile key={friendship.Friend.id} user={friendship.Friend}>
+                <Form method="post" action="/friends?index">
+                  <input
+                    type="hidden"
+                    name="friendId"
+                    value={friendship.Friend.id}
+                  />
+                  <button type="submit" name="intent" value="delFriend">
+                    X
+                  </button>
+                </Form>
+              </UserTile>
+            ))}
+          </UserStack>
         </div>
       ) : (
         <div>You have no friends. Add some.</div>

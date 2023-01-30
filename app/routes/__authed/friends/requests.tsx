@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
+import { UserStack, UserTile } from "~/components/user-stack";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -66,29 +67,25 @@ export default function FriendsRequests() {
       <h2>Friend Requests ({friendships.length})</h2>
       {friendships.length > 0 ? (
         <div>
-          <ul>
-            {friendships.map((friendship) => {
-              return (
-                <li key={friendship.User.id}>
-                  <Form method="post">
-                    <input
-                      type="hidden"
-                      name="friendId"
-                      value={friendship.User.id}
-                    />
-                    {friendship.User.fullName || "Nameless"} (
-                    {friendship.User.username})
-                    <button type="submit" name="intent" value="accept">
-                      Accept
-                    </button>
-                    <button type="submit" name="intent" value="ignore">
-                      Ignore
-                    </button>
-                  </Form>
-                </li>
-              );
-            })}
-          </ul>
+          <UserStack>
+            {friendships.map((friendship) => (
+              <UserTile key={friendship.User.id} user={friendship.User}>
+                <Form method="post">
+                  <input
+                    type="hidden"
+                    name="friendId"
+                    value={friendship.User.id}
+                  />
+                  <button type="submit" name="intent" value="accept">
+                    Accept
+                  </button>
+                  <button type="submit" name="intent" value="ignore">
+                    Ignore
+                  </button>
+                </Form>
+              </UserTile>
+            ))}
+          </UserStack>
         </div>
       ) : (
         <div>You have no requests.</div>
