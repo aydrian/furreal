@@ -33,7 +33,9 @@ export const loader = async ({ request }: LoaderArgs) => {
   };
   dates.forEach((date) => {
     const real = Reals.find((real) => isSameDay(real.createdAt, date));
-    memories.push(real || { ...none, id: date.getTime(), createdAt: date });
+    memories.push(
+      real || { ...none, id: date.getTime() + "", createdAt: date }
+    );
   });
 
   return json({ user, memories });
