@@ -1,5 +1,5 @@
 import type { UserProfile } from "./types.server";
-import { subDays } from "date-fns";
+import { endOfToday, startOfDay, startOfToday, subDays } from "date-fns";
 import { db } from "./db.server";
 
 export const checkUserExists = async (username: string) => {
@@ -11,8 +11,7 @@ export const checkUserExists = async (username: string) => {
 };
 
 export const getUserProfile = async (userId: string) => {
-  const now = new Date();
-  const then = subDays(now, 13);
+  const then = subDays(new Date(), 13);
   const profile = await db.user.findUnique({
     select: {
       id: true,
@@ -24,12 +23,8 @@ export const getUserProfile = async (userId: string) => {
       Reals: {
         where: {
           createdAt: {
-            gte: new Date(
-              `${then.getFullYear()}-${then.getMonth() + 1}-${then.getDate()}`
-            ),
-            lte: new Date(
-              `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1}`
-            )
+            gte: startOfDay(then),
+            lte: endOfToday()
           }
         }
       }
@@ -44,7 +39,6 @@ export const updateUserProfile = async (userId: string, data: UserProfile) => {
 };
 
 export const getUserFeed = async (userId: string) => {
-  const now = new Date();
   const user = await db.user.findUnique({
     select: {
       id: true,
@@ -53,12 +47,8 @@ export const getUserFeed = async (userId: string) => {
       Reals: {
         where: {
           createdAt: {
-            gte: new Date(
-              `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-            ),
-            lt: new Date(
-              `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1}`
-            )
+            gte: startOfToday(),
+            lte: endOfToday()
           }
         }
       },

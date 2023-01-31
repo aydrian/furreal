@@ -13,7 +13,7 @@ export const Memories: React.FC<memoriesProps> = ({ memories }) => {
   return (
     <ul className="grid grid-cols-7">
       {memories.map((memory) => (
-        <Memory memory={memory} />
+        <Memory key={memory.id} memory={memory} />
       ))}
     </ul>
   );

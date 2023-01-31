@@ -1,5 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
-import type { Real } from "@prisma/client";
+import { Prisma, Real } from "@prisma/client";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -33,7 +33,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   };
   dates.forEach((date) => {
     const real = Reals.find((real) => isSameDay(real.createdAt, date));
-    memories.push(real || { ...none, createdAt: date });
+    memories.push(real || { ...none, id: date.getTime(), createdAt: date });
   });
 
   return json({ user, memories });

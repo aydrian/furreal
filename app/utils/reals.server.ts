@@ -1,4 +1,5 @@
 import dataUriToBuffer from "data-uri-to-buffer";
+import { endOfToday, startOfToday } from "date-fns";
 import { db } from "./db.server";
 
 export const createReal = async (
@@ -17,17 +18,12 @@ export const createReal = async (
 };
 
 export const getCurrentReal = async (userId: string) => {
-  const now = new Date();
   const currentReal = await db.real.findFirst({
     where: {
       userId,
       createdAt: {
-        gte: new Date(
-          `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-        ),
-        lt: new Date(
-          `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1}`
-        )
+        gte: startOfToday(),
+        lte: endOfToday()
       }
     }
   });
@@ -41,7 +37,6 @@ export const getCurrentFriendReals = async (
   if (!friends) {
     return [];
   }
-  const now = new Date();
   const friendIds = friends.map((friend) => {
     return friend.friendId;
   });
@@ -50,12 +45,8 @@ export const getCurrentFriendReals = async (
     include: { User: { select: { id: true, username: true } } },
     where: {
       createdAt: {
-        gte: new Date(
-          `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-        ),
-        lt: new Date(
-          `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate() + 1}`
-        )
+        gte: startOfToday(),
+        lte: endOfToday()
       },
       userId: { in: friendIds }
     },
