@@ -63,47 +63,30 @@ export default function Profile() {
               />
             </svg>
           </Link>
-          <h1>Profile</h1>
-          <div></div>
+          <h1 className="font-semibold">Profile</h1>
+          <div className="w-6"></div>
         </div>
       </header>
       <main>
-        <section>
-          {user ? (
-            <UserCircle
-              user={user}
-              className="h-24 w-24 mx-auto flex-shrink-0"
-            />
-          ) : null}
+        <section className="flex flex-col place-items-center">
+          {user ? <UserCircle user={user} className="h-24 w-24" /> : null}
           <Link to="./edit" prefetch="intent">
-            <p>
-              {user?.fullName} <br />
-              {user?.username} <br />
-              {user?.email && (
-                <>
-                  <span>{user.email}</span>
-                  <br />
-                </>
-              )}
-              {user?.bio && (
-                <>
-                  <span>{user.bio}</span>
-                  <br />
-                </>
-              )}
-              {user?.location && (
-                <>
-                  <span>{user.location}</span>
-                  <br />
-                </>
-              )}
-            </p>
+            <div className="flex flex-col place-items-center">
+              <h2 className="text-xl font-semibold">{user?.fullName}</h2>
+              <h3 className="text-lg font-medium">{user?.username}</h3>
+              {user?.email && <div>{user.email}</div>}
+              {user?.bio && <div>{user.bio}</div>}
+              {user?.location && <div>{user.location}</div>}
+            </div>
           </Link>
         </section>
         {memories ? (
           <section>
-            <h2>Your Memories</h2>
-            <Memories memories={memories} />
+            <h2 className="text-xl font-semibold">Your Memories</h2>
+            <div className="rounded-xl bg-slate-700 p-2 ">
+              <h3 className="text-lg font-medium text-white">Last 14 days</h3>
+              <Memories memories={memories} />
+            </div>
           </section>
         ) : null}
         <section>

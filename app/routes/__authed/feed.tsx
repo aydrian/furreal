@@ -35,7 +35,7 @@ export default function Feed() {
       <Outlet />
       <header className="bg-white sticky top-0">
         <div className="flex justify-between">
-          <Link to="/friends" prefetch="intent">
+          <Link to="/friends/" prefetch="intent">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ export default function Feed() {
               <path d="M4.5 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM14.25 8.625a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM1.5 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM17.25 19.128l-.001.144a2.25 2.25 0 01-.233.96 10.088 10.088 0 005.06-1.01.75.75 0 00.42-.643 4.875 4.875 0 00-6.957-4.611 8.586 8.586 0 011.71 5.157v.003z" />
             </svg>
           </Link>
-          <h1>FurReal</h1>
+          <h1 className="font-semibold">FurReal</h1>
           <Link to="/profile" prefetch="intent">
             <UserCircle user={user} className="h-6 w-6" />
           </Link>
@@ -54,34 +54,54 @@ export default function Feed() {
       <main>
         {currentReal ? (
           <>
-            <div>
-              <BufferImage buffer={currentReal.imgData} />
+            <section className="flex flex-col place-items-center">
+              <BufferImage
+                buffer={currentReal.imgData}
+                className="rounded-2xl aspect-square w-1/3"
+              />
               <p>{currentReal.caption}</p>
               <p>
+                ({currentReal.location}) &#x2022;{" "}
                 {formatRelative(new Date(currentReal.createdAt), new Date())}
               </p>
-            </div>
-            {friendReals ? (
-              <ul>
-                {friendReals.map((friendReal) => {
-                  return (
-                    <li key={friendReal.User.id}>
-                      <h3>{friendReal.User.username}</h3>
-                      <BufferImage buffer={friendReal.imgData} />
-                      <p>{friendReal.caption}</p>
-                      <p>
-                        {formatRelative(
-                          new Date(friendReal.createdAt),
-                          new Date()
-                        )}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <div>No one has posted yet</div>
-            )}
+            </section>
+            <section>
+              {friendReals && friendReals.length > 0 ? (
+                <ul className="flex flex-col place-items-center">
+                  {friendReals.map((friendReal) => {
+                    return (
+                      <li key={friendReal.User.id}>
+                        <div className="flex align-middle">
+                          <UserCircle
+                            user={friendReal.User}
+                            className="w-8 h-8"
+                          />
+                          <div className="flex flex-col">
+                            <h3>{friendReal.User.username}</h3>
+                            <p>
+                              ({friendReal.location}) &#x2022;{" "}
+                              {formatRelative(
+                                new Date(friendReal.createdAt),
+                                new Date()
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <BufferImage
+                          buffer={friendReal.imgData}
+                          className="rounded-2xl aspect-square"
+                        />
+                        {friendReal.caption ? (
+                          <p>{friendReal.caption}</p>
+                        ) : null}
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div>No one has posted yet.</div>
+              )}
+            </section>
           </>
         ) : (
           <div>

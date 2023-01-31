@@ -1,6 +1,6 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, Outlet, useActionData } from "@remix-run/react";
+import { Form, Link, NavLink, Outlet, useActionData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getUserId } from "~/utils/session.server";
@@ -31,8 +31,8 @@ export default function Friends() {
     <>
       <header className="bg-white sticky top-0">
         <div className="flex justify-between">
-          <div></div>
-          <h1>FurReal</h1>
+          <div className="w-6"></div>
+          <h1 className="font-semibold">FurReal</h1>
           <Link to="/feed" prefetch="intent">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -64,9 +64,25 @@ export default function Friends() {
           <Outlet />
         </section>
       </main>
-      <footer>
-        <Link to="/friends">Friends</Link>
-        <Link to="/friends/requests">Requests</Link>
+      <footer className="flex place-items-center">
+        <div className="flex bg-slate-800 rounded-full p-2 text-white">
+          <NavLink
+            to="/friends/"
+            className={({ isActive }) =>
+              isActive ? "bg-slate-600 rounded-full p-2" : "p-2"
+            }
+          >
+            Friends
+          </NavLink>
+          <NavLink
+            to="/friends/requests"
+            className={({ isActive }) =>
+              isActive ? "bg-slate-600 rounded-full p-2" : "p-2"
+            }
+          >
+            Requests
+          </NavLink>
+        </div>
       </footer>
     </>
   );
