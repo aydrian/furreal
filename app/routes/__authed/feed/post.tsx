@@ -146,7 +146,6 @@ export default function Post() {
                   type="hidden"
                   name="location"
                   value={`(${position?.coords.latitude}, ${position?.coords.longitude})`}
-                  disabled
                 />
               ) : null}
               <label className="text-white font-medium w-full">
