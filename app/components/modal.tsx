@@ -28,7 +28,7 @@ export const Modal: React.FC<props> = ({
       ></div>
       <div className="fixed inset-0 pointer-events-none flex justify-center items-center max-h-screen overflow-scroll">
         <div
-          className={`${className} p-4 bg-gray-200 pointer-events-auto max-h-screen md:rounded-xl`}
+          className={`${className} p-4 bg-slate-600 pointer-events-auto max-h-screen md:rounded-xl`}
         >
           {/* This is where the modal content is rendered  */}
           {children}

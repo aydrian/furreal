@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { XMarkIcon } from "@heroicons/react/20/solid";
 
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
@@ -59,7 +60,9 @@ export default function FriendsIndex() {
   const { friendships } = useLoaderData<typeof loader>();
   return (
     <section>
-      <h2>My Friends ({friendships.length})</h2>
+      <h3 className="text-lg font-semibold uppercase">
+        My Friends ({friendships.length})
+      </h3>
       {friendships.length > 0 ? (
         <div>
           <UserStack>
@@ -72,7 +75,7 @@ export default function FriendsIndex() {
                     value={friendship.Friend.id}
                   />
                   <button type="submit" name="intent" value="delFriend">
-                    X
+                    <XMarkIcon className="h-5 w-5 text-black" />
                   </button>
                 </Form>
               </UserTile>

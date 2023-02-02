@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { XMarkIcon } from "@heroicons/react/20/solid";
 
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
@@ -64,7 +65,9 @@ export default function FriendsRequests() {
   const { friendships } = useLoaderData<typeof loader>();
   return (
     <section>
-      <h2>Friend Requests ({friendships.length})</h2>
+      <h3 className="text-lg font-semibold uppercase">
+        Friend Requests ({friendships.length})
+      </h3>
       {friendships.length > 0 ? (
         <div>
           <UserStack>
@@ -77,10 +80,10 @@ export default function FriendsRequests() {
                     value={friendship.User.id}
                   />
                   <button type="submit" name="intent" value="accept">
-                    Accept
+                    Add
                   </button>
                   <button type="submit" name="intent" value="ignore">
-                    Ignore
+                    <XMarkIcon className="h-5 w-5 text-black" />
                   </button>
                 </Form>
               </UserTile>
@@ -88,7 +91,10 @@ export default function FriendsRequests() {
           </UserStack>
         </div>
       ) : (
-        <div>You have no requests.</div>
+        <div className="flex flex-col place-items-center rounded-xl bg-slate-600 p-2 text-white">
+          <h3 className="font-semibold">No pending requests</h3>
+          <p>You don't have any pending requests.</p>
+        </div>
       )}
     </section>
   );

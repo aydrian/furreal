@@ -76,7 +76,7 @@ export function UserCombobox() {
           {...cb.getInputProps({
             type: "search",
             className:
-              "py-2 text-sm text-white bg-gray-900 rounded-md pl-10 focus:outline-none focus:bg-white focus:text-gray-900",
+              "w-full py-2 text-sm text-white bg-gray-900 rounded-md pl-10 focus:outline-none focus:bg-white focus:text-gray-900",
             placeholder: "Search...",
             autoComplete: "off"
           })}

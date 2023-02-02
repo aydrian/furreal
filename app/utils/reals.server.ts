@@ -5,14 +5,16 @@ import { db } from "./db.server";
 export const createReal = async (
   dataUrl: string,
   userId: string,
-  caption: string
+  caption: string,
+  location?: string
 ) => {
   const imgData = dataUriToBuffer(dataUrl);
   await db.real.create({
     data: {
       imgData,
       caption,
-      userId
+      userId,
+      location
     }
   });
 };

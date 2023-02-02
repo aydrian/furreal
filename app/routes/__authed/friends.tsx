@@ -2,6 +2,7 @@ import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useActionData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { ArrowSmallRightIcon } from "@heroicons/react/24/solid";
 
 import { getUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
@@ -29,29 +30,16 @@ export default function Friends() {
   const actionData = useActionData();
   return (
     <>
-      <header className="bg-white sticky top-0">
+      <header className="bg-white sticky top-0 p-2">
         <div className="flex justify-between">
           <div className="w-6"></div>
           <h1 className="font-semibold">FurReal</h1>
           <Link to="/feed" prefetch="intent">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-              />
-            </svg>
+            <ArrowSmallRightIcon className="h-6 w-6 text-black" />
           </Link>
         </div>
       </header>
-      <main>
+      <main className="flex flex-col gap-2 p-2">
         <section>
           <Form method="post" action="/friends">
             <UserCombobox />
@@ -64,13 +52,14 @@ export default function Friends() {
           <Outlet />
         </section>
       </main>
-      <footer className="flex place-items-center">
+      <footer className="flex flex-col place-items-center fixed bottom-0 p-4 w-full z-30">
         <div className="flex bg-slate-800 rounded-full p-2 text-white">
           <NavLink
             to="/friends/"
             className={({ isActive }) =>
               isActive ? "bg-slate-600 rounded-full p-2" : "p-2"
             }
+            prefetch="intent"
           >
             Friends
           </NavLink>
@@ -79,6 +68,7 @@ export default function Friends() {
             className={({ isActive }) =>
               isActive ? "bg-slate-600 rounded-full p-2" : "p-2"
             }
+            prefetch="intent"
           >
             Requests
           </NavLink>

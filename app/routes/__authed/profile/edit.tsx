@@ -53,7 +53,7 @@ export default function EditProfile() {
   const actionData = useActionData() as ActionData<ActionInput>;
   return (
     <>
-      <header className="bg-white sticky top-0">
+      <header className="bg-white sticky top-0 p-2">
         <div className="flex justify-between">
           <Link to="../">Cancel</Link>
           <h1>Edit Profile</h1>
@@ -69,7 +69,7 @@ export default function EditProfile() {
           </div>
         </div>
       </header>
-      <main>
+      <main className="p-2">
         {user ? (
           <UserCircle user={user} className="h-24 w-24 mx-auto flex-shrink-0" />
         ) : null}

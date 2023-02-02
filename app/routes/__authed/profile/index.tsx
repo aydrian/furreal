@@ -4,6 +4,7 @@ import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { eachDayOfInterval, isSameDay, subDays } from "date-fns";
+import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid";
 
 import { getUserId } from "~/utils/session.server";
 import { getUserProfile } from "~/utils/users.server";
@@ -45,29 +46,16 @@ export default function Profile() {
   const { user, memories } = useLoaderData<typeof loader>();
   return (
     <>
-      <header className="bg-white sticky top-0">
+      <header className="bg-white sticky top-0 p-2">
         <div className="flex justify-between">
           <Link to="/feed" prefetch="intent">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"
-              />
-            </svg>
+            <ArrowSmallLeftIcon className="h-6 w-6 text-black" />
           </Link>
           <h1 className="font-semibold">Profile</h1>
           <div className="w-6"></div>
         </div>
       </header>
-      <main>
+      <main className="flex flex-col gap-2 p-2">
         <section className="flex flex-col place-items-center">
           {user ? <UserCircle user={user} className="h-24 w-24" /> : null}
           <Link to="./edit" prefetch="intent">
@@ -83,7 +71,7 @@ export default function Profile() {
         {memories ? (
           <section>
             <h2 className="text-xl font-semibold">Your Memories</h2>
-            <div className="rounded-xl bg-slate-700 p-2 ">
+            <div className="rounded-xl bg-slate-600 p-2 ">
               <h3 className="text-lg font-medium text-white">Last 14 days</h3>
               <Memories memories={memories} />
             </div>
