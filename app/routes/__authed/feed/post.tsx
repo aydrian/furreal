@@ -41,10 +41,10 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ fieldErrors: errors, fields: formData }, { status: 400 });
   }
 
-  const { caption, dataUrl } = formData;
+  const { caption, dataUrl, location } = formData;
 
   try {
-    await createReal(dataUrl, userId, caption);
+    await createReal(dataUrl, userId, caption, location);
   } catch (e) {
     console.error(e);
     return json(
@@ -68,7 +68,7 @@ export default function Post() {
 
   const videoConstraints = {
     width: 420,
-    height: 420,
+    height: 560,
     facingMode: "user"
   };
 
@@ -91,12 +91,12 @@ export default function Post() {
         <h1 className="text-2xl text-center text-white font-bold">FurReal</h1>
         {img === null ? (
           <>
-            <div className="rounded-xl aspect-square w-full">
+            <div className="rounded-xl aspect-[3/4] w-full">
               <Webcam
                 audio={false}
                 mirrored={true}
-                height={400}
-                width={400}
+                height={560}
+                width={420}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
                 videoConstraints={{ ...videoConstraints, facingMode }}
@@ -150,7 +150,8 @@ export default function Post() {
                 />
               ) : null}
               <label className="text-white font-medium w-full">
-                Caption: <input type="text" name="caption" />
+                Caption:{" "}
+                <input type="text" name="caption" className="text-black" />
               </label>
               {actionData?.fieldErrors?.caption ? (
                 <div className="pt-1 text-red-700">
