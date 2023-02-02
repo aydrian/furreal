@@ -55,7 +55,7 @@ export default function Feed() {
               />
               <p>{currentReal.caption}</p>
               <p>
-                ({currentReal.location}) &#x2022;{" "}
+                {currentReal.location} &#x2022;{" "}
                 {formatRelative(new Date(currentReal.createdAt), new Date())}
               </p>
             </section>
@@ -73,7 +73,7 @@ export default function Feed() {
                           <div className="flex flex-col">
                             <h3>{friendReal.User.username}</h3>
                             <p>
-                              ({friendReal.location}) &#x2022;{" "}
+                              {friendReal.location} &#x2022;{" "}
                               {formatRelative(
                                 new Date(friendReal.createdAt),
                                 new Date()
