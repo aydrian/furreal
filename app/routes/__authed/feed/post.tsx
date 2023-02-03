@@ -69,7 +69,8 @@ export default function Post() {
   const videoConstraints = {
     width: 420,
     height: 560,
-    facingMode: "user"
+    facingMode: "user",
+    aspectRatio: 420 / 560
   };
 
   const capture = useCallback(() => {
