@@ -69,7 +69,7 @@ export default function Post() {
   const videoConstraints = {
     width: 420,
     height: 420,
-    facingMode: "environment"
+    facingMode: { exact: "environment" }
   };
 
   const capture = useCallback(() => {
