@@ -18,7 +18,7 @@ export const UserStack: React.FC<stackProps> = ({ children }) => {
 
 export const UserTile: React.FC<tileProps> = ({ user, children }) => {
   return (
-    <li className="flex">
+    <li className="flex py-2">
       <UserCircle user={user} className="h-12 w-12" />
       <div className="flex flex-col ml-2 flex-grow">
         <div className="font-semibold">{user.fullName}</div>

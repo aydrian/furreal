@@ -73,14 +73,19 @@ export default function FriendsRequests() {
           <UserStack>
             {friendships.map((friendship) => (
               <UserTile key={friendship.User.id} user={friendship.User}>
-                <Form method="post">
+                <Form method="post" className="flex align-middle">
                   <input
                     type="hidden"
                     name="friendId"
                     value={friendship.User.id}
                   />
-                  <button type="submit" name="intent" value="accept">
-                    Add
+                  <button
+                    type="submit"
+                    name="intent"
+                    value="accept"
+                    className="rounded-full bg-slate-600 text-white uppercase text-xs"
+                  >
+                    Accept
                   </button>
                   <button type="submit" name="intent" value="ignore">
                     <XMarkIcon className="h-5 w-5 text-black" />

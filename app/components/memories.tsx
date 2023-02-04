@@ -23,7 +23,7 @@ export const Memories: React.FC<memoriesProps> = ({ memories }) => {
 
 const Memory: React.FC<memoryProps> = ({ memory }) => {
   return (
-    <li className="flex place-content-center place-items-center">
+    <li className="flex place-content-center place-items-center aspect-[3/4] w-full">
       <div className="absolute z-10 font-bold text-lg text-white">
         {new Date(memory.createdAt).getDate()}
       </div>

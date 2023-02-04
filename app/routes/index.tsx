@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json(
       {
         fields: formData,
-        formError: `Email/Password combination is incorrect`
+        formError: `Username/Password combination is incorrect`
       },
       { status: 400 }
     );
