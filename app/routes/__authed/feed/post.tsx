@@ -67,10 +67,10 @@ export default function Post() {
   const actionData = useActionData() as ActionData<ActionInput>;
 
   const videoConstraints = {
-    width: 420,
-    height: 560,
-    facingMode: "user",
-    aspectRatio: 420 / 560
+    width: 480,
+    height: 720,
+    facingMode: "user"
+    //aspectRatio: 420 / 560
   };
 
   const capture = useCallback(() => {
