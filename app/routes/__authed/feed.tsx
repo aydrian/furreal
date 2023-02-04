@@ -51,7 +51,7 @@ export default function Feed() {
             <section className="flex flex-col place-items-center">
               <BufferImage
                 buffer={currentReal.imgData}
-                className="rounded-2xl  aspect-[3/4] w-1/3"
+                className="rounded-2xl aspect-square w-1/3"
               />
               <p>{currentReal.caption}</p>
               <p>
@@ -83,7 +83,7 @@ export default function Feed() {
                         </div>
                         <BufferImage
                           buffer={friendReal.imgData}
-                          className="rounded-2xl aspect-[3/4]"
+                          className="rounded-2xl aspect-square"
                         />
                         {friendReal.caption ? (
                           <p>{friendReal.caption}</p>

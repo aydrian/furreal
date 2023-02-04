@@ -67,10 +67,9 @@ export default function Post() {
   const actionData = useActionData() as ActionData<ActionInput>;
 
   const videoConstraints = {
-    width: 480,
-    height: 720,
-    facingMode: "user"
-    //aspectRatio: 420 / 560
+    width: 420,
+    height: 420,
+    facingMode: "environment"
   };
 
   const capture = useCallback(() => {
@@ -92,11 +91,11 @@ export default function Post() {
         <h1 className="text-2xl text-center text-white font-bold">FurReal</h1>
         {img === null ? (
           <>
-            <div className="rounded-xl aspect-[3/4] w-full">
+            <div className="rounded-xl aspect-square w-full">
               <Webcam
                 audio={false}
                 mirrored={true}
-                height={560}
+                height={420}
                 width={420}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
