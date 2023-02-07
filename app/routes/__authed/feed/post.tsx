@@ -19,6 +19,7 @@ import { useGeoPosition } from "~/hooks/useGeoPosition";
 import { validateAction } from "~/utils/utils";
 import { getUserId } from "~/utils/session.server";
 import { createReal } from "~/utils/reals.server";
+import { LocationTag } from "~/components/location-tag";
 
 const schema = Z.object({
   caption: Z.string(),
@@ -126,14 +127,12 @@ export default function Post() {
               >
                 <XCircleIcon className="h-6 w-6 text-slate-700" />
               </button>
-              <div className="flex absolute z-10 bottom-4 rounded-full bg-slate-500 text-white p-2">
-                <MapPinIcon className="h-4 w-4" />
-                <p className="text-sm font-medium">
-                  {status === "resolved"
-                    ? `(${position?.coords.latitude}, ${position?.coords.longitude})`
-                    : "location not enabled"}
-                </p>
-              </div>
+              {status === "resolved" && position ? (
+                <LocationTag
+                  coords={position.coords}
+                  className="absolute bottom-4 z-10 bg-slate-500 text-white"
+                />
+              ) : null}
             </div>
 
             <Form
