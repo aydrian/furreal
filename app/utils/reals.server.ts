@@ -34,6 +34,7 @@ export const getCurrentReal = async (userId: string) => {
 };
 
 export const getCurrentFriendReals = async (
+  userId: string,
   friends: Array<{ friendId: string }> | undefined
 ) => {
   if (!friends) {
@@ -44,7 +45,10 @@ export const getCurrentFriendReals = async (
   });
 
   const friendReals = await db.real.findMany({
-    include: { User: { select: { id: true, username: true } } },
+    include: {
+      User: { select: { id: true, username: true } },
+      Reaction: { select: { type: true }, where: { userId } }
+    },
     where: {
       createdAt: {
         gte: startOfToday(),

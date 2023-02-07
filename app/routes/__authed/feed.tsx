@@ -1,9 +1,16 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  Form,
+  Link,
+  Outlet,
+  useLoaderData,
+  useNavigate
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { formatRelative } from "date-fns";
 import { EyeSlashIcon, UsersIcon } from "@heroicons/react/24/solid";
+import { HeartIcon } from "@heroicons/react/24/solid";
 
 import { getUserId } from "~/utils/session.server";
 
@@ -11,6 +18,8 @@ import { BufferImage } from "~/components/buffer-image";
 import { UserCircle } from "~/components/user-circle";
 import { getUserFeed } from "~/utils/users.server";
 import { getCurrentFriendReals } from "~/utils/reals.server";
+import { db } from "~/utils/db.server";
+import { ReactionType } from "@prisma/client";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -22,9 +31,32 @@ export const loader = async ({ request }: LoaderArgs) => {
     return json({ user, friendReals: null });
   }
 
-  const friendReals = await getCurrentFriendReals(user?.Friends);
+  const friendReals = await getCurrentFriendReals(userId, user?.Friends);
 
   return json({ user, friendReals });
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  const userId = await getUserId(request);
+  invariant(userId, "User ID should be a string.");
+
+  const formData = Object.fromEntries(await request.formData());
+
+  if (formData.intent === "addLike") {
+    const realId = formData.realId as string;
+    await db.reaction.create({
+      data: {
+        userId,
+        realId
+      }
+    });
+    return json({ message: "Added Like." }, { status: 200 });
+  } else if (formData.intent == "delLike") {
+    const realId = formData.realId as string;
+    await db.reaction.delete({ where: { realId_userId: { realId, userId } } });
+    return json({ message: "Deleted Like." }, { status: 200 });
+  }
+  return json({ message: "Intent not supported" }, { status: 400 });
 };
 
 export default function Feed() {
@@ -63,31 +95,60 @@ export default function Feed() {
               {friendReals && friendReals.length > 0 ? (
                 <ul className="flex flex-col place-items-center">
                   {friendReals.map((friendReal) => {
+                    const yourReactions = friendReal.Reaction.map(
+                      (i) => i.type
+                    );
+                    const liked = yourReactions.includes(ReactionType.LIKE);
                     return (
                       <li key={friendReal.User.id}>
-                        <div className="flex align-middle">
-                          <UserCircle
-                            user={friendReal.User}
-                            className="w-8 h-8"
+                        <Form method="post">
+                          <input
+                            type="hidden"
+                            name="realId"
+                            value={friendReal.id}
                           />
-                          <div className="flex flex-col">
-                            <h3>{friendReal.User.username}</h3>
-                            <p>
-                              {friendReal.location} &#x2022;{" "}
-                              {formatRelative(
-                                new Date(friendReal.createdAt),
-                                new Date()
-                              )}
-                            </p>
+                          <div className="flex align-middle">
+                            <UserCircle
+                              user={friendReal.User}
+                              className="w-8 h-8"
+                            />
+                            <div className="flex flex-col">
+                              <h3>{friendReal.User.username}</h3>
+                              <p>
+                                {friendReal.location} &#x2022;{" "}
+                                {formatRelative(
+                                  new Date(friendReal.createdAt),
+                                  new Date()
+                                )}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <BufferImage
-                          buffer={friendReal.imgData}
-                          className="rounded-2xl aspect-square"
-                        />
-                        {friendReal.caption ? (
-                          <p>{friendReal.caption}</p>
-                        ) : null}
+                          <div className="relative aspect-square">
+                            <BufferImage
+                              buffer={friendReal.imgData}
+                              className="rounded-2xl aspect-square w-full"
+                            />
+                            <div className="absolute z-10 bottom-2 right-4">
+                              <button
+                                type="submit"
+                                name="intent"
+                                value={liked ? "delLike" : "addLike"}
+                                className="p-0 m-0"
+                              >
+                                <HeartIcon
+                                  className={`h-12 w-12  drop-shadow-md ${
+                                    liked
+                                      ? "text-pink-600"
+                                      : "text-white hover:text-pink-600"
+                                  }`}
+                                />
+                              </button>
+                            </div>
+                          </div>
+                          {friendReal.caption ? (
+                            <p>{friendReal.caption}</p>
+                          ) : null}
+                        </Form>
                       </li>
                     );
                   })}

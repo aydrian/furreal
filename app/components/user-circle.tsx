@@ -10,7 +10,7 @@ export function UserCircle({ user, onClick, className }: props) {
   const names = user.fullName ? user.fullName.split(" ") : [user.username];
   return (
     <div
-      className={`${className} cursor-pointer bg-gray-400 rounded-full flex justify-center items-center`}
+      className={`${className} cursor-pointer bg-gray-400 rounded-full flex justify-center items-center aspect-square`}
       onClick={onClick}
     >
       <h2>
