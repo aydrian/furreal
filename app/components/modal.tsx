@@ -26,7 +26,7 @@ export const Modal: React.FC<props> = ({
         aria-modal="true"
         onClick={() => navigate("/feed")}
       ></div>
-      <div className="fixed inset-0 pointer-events-none flex justify-center items-center max-h-screen overflow-scroll">
+      <div className="fixed inset-0 pointer-events-none flex justify-center items-center max-h-screen overflow-scroll z-50">
         <div
           className={`${className} p-4 bg-slate-600 pointer-events-auto max-h-screen md:rounded-xl`}
         >

@@ -1,7 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
-  Form,
   Link,
   Outlet,
   useFetcher,
@@ -72,10 +71,12 @@ export default function Feed() {
         <div className="flex justify-between">
           <Link to="/friends/" prefetch="intent">
             <UsersIcon className="h-6 w-6 text-black" />
+            <span className="sr-only">Friends</span>
           </Link>
           <h1 className="font-semibold">FurReal</h1>
           <Link to="/profile" prefetch="intent">
             <UserCircle user={user} className="h-6 w-6" />
+            <span className="sr-only">Profile</span>
           </Link>
         </div>
       </header>
@@ -188,6 +189,9 @@ function FriendReal({ friendReal }) {
                     : "text-white"
                 }`}
               />
+              <span className="sr-only">
+                {(liked || isLiking) && !isDisliking ? "Dislike" : "Like"}
+              </span>
             </button>
           </div>
         </div>

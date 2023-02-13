@@ -8,7 +8,6 @@ import * as Z from "zod";
 import invariant from "tiny-invariant";
 import {
   ArrowPathIcon,
-  MapPinIcon,
   PaperAirplaneIcon,
   XCircleIcon
 } from "@heroicons/react/24/solid";
@@ -24,7 +23,9 @@ import { LocationTag } from "~/components/location-tag";
 const schema = Z.object({
   caption: Z.string(),
   dataUrl: Z.string(),
-  location: Z.string().optional()
+  location: Z.string().optional(),
+  latitude: Z.number().optional(),
+  longitude: Z.number().optional()
 });
 
 type ActionInput = Z.TypeOf<typeof schema>;
@@ -42,10 +43,15 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ fieldErrors: errors, fields: formData }, { status: 400 });
   }
 
-  const { caption, dataUrl, location } = formData;
+  const { caption, dataUrl, location, latitude, longitude } = formData;
+
+  let coords: Array<number> = [];
+  if (latitude && longitude) {
+    coords = [latitude, longitude];
+  }
 
   try {
-    await createReal(dataUrl, userId, caption, location);
+    await createReal(dataUrl, userId, caption, location, coords);
   } catch (e) {
     console.error(e);
     return json(
@@ -62,7 +68,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Post() {
   const [img, setImg] = useState<string | null>(null);
-  const { status, position, error } = useGeoPosition();
+  const { status, position, location, error } = useGeoPosition();
   const [facingMode, setFacingMode] = useState("user");
   const webcamRef = useRef<Webcam>(null);
   const actionData = useActionData() as ActionData<ActionInput>;
@@ -127,9 +133,9 @@ export default function Post() {
               >
                 <XCircleIcon className="h-6 w-6 text-slate-700" />
               </button>
-              {status === "resolved" && position ? (
+              {status === "resolved" && location ? (
                 <LocationTag
-                  coords={position.coords}
+                  location={location}
                   className="absolute bottom-4 z-10 bg-slate-500 text-white"
                 />
               ) : null}
@@ -141,11 +147,19 @@ export default function Post() {
             >
               <input type="hidden" name="dataUrl" value={img} />
               {status === "resolved" ? (
-                <input
-                  type="hidden"
-                  name="location"
-                  value={`(${position?.coords.latitude}, ${position?.coords.longitude})`}
-                />
+                <>
+                  <input type="hidden" name="location" value={location} />
+                  <input
+                    type="hidden"
+                    name="latitude"
+                    value={position?.coords.latitude}
+                  />
+                  <input
+                    type="hidden"
+                    name="longitude"
+                    value={position?.coords.longitude}
+                  />
+                </>
               ) : null}
               <label className="text-white font-medium w-full">
                 Caption:{" "}

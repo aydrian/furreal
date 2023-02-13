@@ -6,7 +6,8 @@ export const createReal = async (
   dataUrl: string,
   userId: string,
   caption: string,
-  location?: string
+  location?: string,
+  coords?: Array<number>
 ) => {
   const imgData = dataUriToBuffer(dataUrl);
   await db.real.create({
@@ -14,7 +15,8 @@ export const createReal = async (
       imgData,
       caption,
       userId,
-      location
+      location,
+      coords
     }
   });
 };
