@@ -4,6 +4,7 @@ import {
   Form,
   Link,
   Outlet,
+  useFetcher,
   useLoaderData,
   useNavigate
 } from "@remix-run/react";
@@ -63,6 +64,7 @@ export default function Feed() {
   const { user, friendReals } = useLoaderData<typeof loader>();
   const currentReal = user?.Reals[0];
   const navigate = useNavigate();
+
   return (
     <>
       <Outlet />
@@ -94,67 +96,27 @@ export default function Feed() {
             <section>
               {friendReals && friendReals.length > 0 ? (
                 <ul className="flex flex-col place-items-center">
-                  {friendReals.map((friendReal) => {
-                    const yourReactions = friendReal.Reaction.map(
-                      (i) => i.type
-                    );
-                    const liked = yourReactions.includes(ReactionType.LIKE);
-                    return (
-                      <li key={friendReal.User.id}>
-                        <Form method="post">
-                          <input
-                            type="hidden"
-                            name="realId"
-                            value={friendReal.id}
-                          />
-                          <div className="flex align-middle">
-                            <UserCircle
-                              user={friendReal.User}
-                              className="w-8 h-8"
-                            />
-                            <div className="flex flex-col">
-                              <h3>{friendReal.User.username}</h3>
-                              <p>
-                                {friendReal.location} &#x2022;{" "}
-                                {formatRelative(
-                                  new Date(friendReal.createdAt),
-                                  new Date()
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="relative aspect-square">
-                            <BufferImage
-                              buffer={friendReal.imgData}
-                              className="rounded-2xl aspect-square w-full"
-                            />
-                            <div className="absolute z-10 bottom-2 right-4">
-                              <button
-                                type="submit"
-                                name="intent"
-                                value={liked ? "delLike" : "addLike"}
-                                className="p-0 m-0"
-                              >
-                                <HeartIcon
-                                  className={`h-12 w-12  drop-shadow-md ${
-                                    liked
-                                      ? "text-pink-600"
-                                      : "text-white hover:text-pink-600"
-                                  }`}
-                                />
-                              </button>
-                            </div>
-                          </div>
-                          {friendReal.caption ? (
-                            <p>{friendReal.caption}</p>
-                          ) : null}
-                        </Form>
-                      </li>
-                    );
-                  })}
+                  {friendReals.map((friendReal) => (
+                    <FriendReal
+                      key={friendReal.User.id}
+                      friendReal={friendReal}
+                    />
+                  ))}
                 </ul>
               ) : (
-                <div>No one has posted yet.</div>
+                <div className="flex flex-col place-items-center px-2 py-8">
+                  <p className="text-center">
+                    Your friends haven't posted their FurReal yet. Add even more
+                    friends.
+                  </p>
+                  <button
+                    type="button"
+                    className="text-black font-medium bg-white mt-4"
+                    onClick={() => navigate(`/friends/`)}
+                  >
+                    + Add Friends
+                  </button>
+                </div>
               )}
             </section>
           </>
@@ -176,5 +138,61 @@ export default function Feed() {
         )}
       </main>
     </>
+  );
+}
+
+function FriendReal({ friendReal }) {
+  const fetcher = useFetcher();
+
+  const isLiking =
+    fetcher.submission?.formData.get("intent") === "addLike" &&
+    fetcher.submission?.formData.get("realId") === friendReal.id;
+  const isDisliking =
+    fetcher.submission?.formData.get("intent") === "delLike" &&
+    fetcher.submission?.formData.get("realId") === friendReal.id;
+
+  const yourReactions = friendReal.Reaction.map((reaction) => reaction.type);
+  const liked = yourReactions.includes(ReactionType.LIKE);
+  return (
+    <li>
+      <fetcher.Form method="post" replace>
+        <input type="hidden" name="realId" value={friendReal.id} />
+        <div className="flex align-middle">
+          <UserCircle user={friendReal.User} className="w-8 h-8" />
+          <div className="flex flex-col">
+            <h3>{friendReal.User.username}</h3>
+            <p>
+              {friendReal.location} &#x2022;{" "}
+              {formatRelative(new Date(friendReal.createdAt), new Date())}
+            </p>
+          </div>
+        </div>
+        <div className="relative aspect-square">
+          <BufferImage
+            buffer={friendReal.imgData}
+            className="rounded-2xl aspect-square w-full"
+          />
+          <div className="absolute z-10 bottom-2 right-4">
+            <button
+              type="submit"
+              name="intent"
+              value={
+                (liked || isLiking) && !isDisliking ? "delLike" : "addLike"
+              }
+              className="p-0 m-0"
+            >
+              <HeartIcon
+                className={`h-12 w-12  drop-shadow-md ${
+                  (liked || isLiking) && !isDisliking
+                    ? "text-pink-600"
+                    : "text-white hover:text-pink-600"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+        {friendReal.caption ? <p>{friendReal.caption}</p> : null}
+      </fetcher.Form>
+    </li>
   );
 }
