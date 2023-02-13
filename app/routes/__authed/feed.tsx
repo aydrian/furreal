@@ -185,7 +185,7 @@ function FriendReal({ friendReal }) {
                 className={`h-12 w-12  drop-shadow-md ${
                   (liked || isLiking) && !isDisliking
                     ? "text-pink-600"
-                    : "text-white hover:text-pink-600"
+                    : "text-white"
                 }`}
               />
             </button>
