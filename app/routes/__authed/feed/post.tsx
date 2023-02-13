@@ -24,8 +24,8 @@ const schema = Z.object({
   caption: Z.string(),
   dataUrl: Z.string(),
   location: Z.string().optional(),
-  latitude: Z.number().optional(),
-  longitude: Z.number().optional()
+  latitude: Z.string().optional(),
+  longitude: Z.string().optional()
 });
 
 type ActionInput = Z.TypeOf<typeof schema>;
@@ -47,7 +47,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   let coords: Array<number> = [];
   if (latitude && longitude) {
-    coords = [latitude, longitude];
+    coords = [parseFloat(latitude), parseFloat(longitude)];
   }
 
   try {
