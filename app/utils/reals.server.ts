@@ -69,25 +69,37 @@ export const getCurrentFriendRealsRaw = async (userId: string) => {
     friends AS (
       SELECT u.id, f.friend_id, u.username
       FROM friendships f
-      JOIN users u on f.friend_id = u.id
+        JOIN users u on f.friend_id = u.id
       WHERE user_id = ${userId}
-      AND pending = 'f'
+        AND pending = 'f'
     ),
-    posts AS (
+    friend_posts (
+      post_id,
+      post_caption,
+      post_username,
+      reaction_type
+    ) AS (
       SELECT r.id, r.caption, f.username, re.type
       FROM reals r
-      JOIN friends f on r.user_id = f.friend_id
-      LEFT JOIN reactions re on r.id = re.real_id
+        JOIN friends f on r.user_id = f.friend_id
+        LEFT JOIN reactions re on r.id = re.real_id
       WHERE CAST(r.created_at AS DATE) = current_date()
+    ),
+    reaction_counts AS (
+      SELECT post_id, post_caption, post_username, reaction_type, COUNT(*)
+      FROM friend_posts p
+      GROUP BY post_id, post_caption, post_username, reaction_type
+    ),
+    my_reactions (post_id, my_reaction) AS (
+      SELECT r.id, re.type
+      FROM reactions re
+        JOIN reals r ON re.real_id = r.id
+      WHERE re.user_id = ${userId}
     )
   SELECT
-      p.username,
-      p.id,
-      p.caption,
-      p.type,
-      COUNT(*)
-  FROM posts p
-  GROUP BY p.id, p.username, p.caption, p.type;
+      rc.post_id, rc.post_caption, rc.post_username, rc.reaction_type, rc.count, mr.my_reaction
+  FROM reaction_counts rc
+    LEFT JOIN my_reactions mr ON rc.post_id = mr.post_id;
   `;
 
   return friendReals;
