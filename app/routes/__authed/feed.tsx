@@ -17,7 +17,10 @@ import { getUserId } from "~/utils/session.server";
 import { BufferImage } from "~/components/buffer-image";
 import { UserCircle } from "~/components/user-circle";
 import { getUserFeed } from "~/utils/users.server";
-import { getCurrentFriendReals } from "~/utils/reals.server";
+import {
+  getCurrentFriendReals,
+  getCurrentFriendRealsRaw
+} from "~/utils/reals.server";
 import { db } from "~/utils/db.server";
 import { ReactionType } from "@prisma/client";
 
@@ -32,6 +35,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
 
   const friendReals = await getCurrentFriendReals(userId, user?.Friends);
+  const friendRealsRaw = await getCurrentFriendRealsRaw(userId);
+  console.log("friendRealsRaw", friendRealsRaw);
 
   return json({ user, friendReals });
 };

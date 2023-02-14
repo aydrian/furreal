@@ -62,3 +62,33 @@ export const getCurrentFriendReals = async (
   });
   return friendReals;
 };
+
+export const getCurrentFriendRealsRaw = async (userId: string) => {
+  const friendReals = await db.$queryRaw`
+  WITH
+    friends AS (
+      SELECT u.id, f.friend_id, u.username
+      FROM friendships f
+      JOIN users u on f.friend_id = u.id
+      WHERE user_id = ${userId}
+      AND pending = 'f'
+    ),
+    posts AS (
+      SELECT r.id, r.caption, f.username, re.type
+      FROM reals r
+      JOIN friends f on r.user_id = f.friend_id
+      LEFT JOIN reactions re on r.id = re.real_id
+      WHERE CAST(r.created_at AS DATE) = current_date()
+    )
+  SELECT
+      p.username,
+      p.id,
+      p.caption,
+      p.type,
+      COUNT(*)
+  FROM posts p
+  GROUP BY p.id, p.username, p.caption, p.type;
+  `;
+
+  return friendReals;
+};
