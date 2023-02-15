@@ -6,6 +6,7 @@ interface props {
   required?: boolean;
   disabled?: boolean;
   error?: string;
+  className?: string;
 }
 
 export const FormField: React.FC<props> = ({
@@ -15,10 +16,11 @@ export const FormField: React.FC<props> = ({
   defaultValue,
   required,
   disabled,
-  error = ""
+  error = "",
+  className = ""
 }) => {
   return (
-    <>
+    <div className={className}>
       <label htmlFor={htmlFor}>{label}</label>
       <input
         id={htmlFor}
@@ -30,6 +32,6 @@ export const FormField: React.FC<props> = ({
         aria-errormessage={error ? `${htmlFor}-error` : undefined}
       />
       {error ? <div className="pt-1 text-red-700">{error}</div> : undefined}
-    </>
+    </div>
   );
 };

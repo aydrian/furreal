@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderArgs } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import type { ActionData } from "~/utils/types.server";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
@@ -17,6 +17,10 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
   return json({ ok: true });
 };
+
+export const meta: MetaFunction = () => ({
+  title: "FurReal: Sign up"
+});
 
 const schema = Z.object({
   fullName: Z.string({ required_error: "Name is required" }),
@@ -80,64 +84,68 @@ export default function SignUp() {
   const [searchParams] = useSearchParams();
   return (
     <main>
-      <h1>Sign up</h1>
-      <Form method="post" className="grid gap-4">
-        <input
-          type="hidden"
-          name="redirectTo"
-          value={searchParams.get("redirectTo") ?? undefined}
-        />
-        <FormField
-          htmlFor="fullName"
-          label="Name"
-          type="text"
-          required
-          defaultValue={actionData?.fields?.fullName}
-          error={actionData?.fieldErrors?.fullName}
-        />
-        <FormField
-          htmlFor="username"
-          label="Username"
-          type="text"
-          required
-          defaultValue={actionData?.fields?.username}
-          error={actionData?.fieldErrors?.username}
-        />
-        <FormField
-          htmlFor="password"
-          label="Password"
-          type="password"
-          required
-          defaultValue={actionData?.fields?.password}
-          error={actionData?.fieldErrors?.password}
-        />
-        <FormField
-          htmlFor="confirmPassword"
-          label="Confirm Password"
-          type="password"
-          required
-          defaultValue={actionData?.fields?.confirmPassword}
-          error={actionData?.fieldErrors?.confirmPassword}
-        />
-        {actionData?.formError ? (
-          <div className="pt-1 text-red-700">{actionData.formError}</div>
-        ) : undefined}
-        <button type="submit" className="text-white bg-teal-500">
-          Create Account
-        </button>
-        <div className="text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <Link
-            className="text-blue-500 underline"
-            to={{
-              pathname: "/",
-              search: searchParams.toString()
-            }}
-          >
-            Log in
-          </Link>
+      <section className="flex flex-col lg:justify-center bg-white p-4 sm:p-8">
+        <div className="lg:max-w-xl mx-auto">
+          <h3 className="font-bold text-xl mb-2">Sign up</h3>
+          <Form method="post" className="grid gap-4">
+            <input
+              type="hidden"
+              name="redirectTo"
+              value={searchParams.get("redirectTo") ?? undefined}
+            />
+            <FormField
+              htmlFor="fullName"
+              label="Name"
+              type="text"
+              required
+              defaultValue={actionData?.fields?.fullName}
+              error={actionData?.fieldErrors?.fullName}
+            />
+            <FormField
+              htmlFor="username"
+              label="Username"
+              type="text"
+              required
+              defaultValue={actionData?.fields?.username}
+              error={actionData?.fieldErrors?.username}
+            />
+            <FormField
+              htmlFor="password"
+              label="Password"
+              type="password"
+              required
+              defaultValue={actionData?.fields?.password}
+              error={actionData?.fieldErrors?.password}
+            />
+            <FormField
+              htmlFor="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              required
+              defaultValue={actionData?.fields?.confirmPassword}
+              error={actionData?.fieldErrors?.confirmPassword}
+            />
+            {actionData?.formError ? (
+              <div className="pt-1 text-red-700">{actionData.formError}</div>
+            ) : undefined}
+            <button type="submit" className="text-white bg-teal-500">
+              Create Account
+            </button>
+            <div className="text-center text-sm text-gray-500">
+              Already have an account?{" "}
+              <Link
+                className="text-blue-500 underline"
+                to={{
+                  pathname: "/",
+                  search: searchParams.toString()
+                }}
+              >
+                Log in
+              </Link>
+            </div>
+          </Form>
         </div>
-      </Form>
+      </section>
     </main>
   );
 }

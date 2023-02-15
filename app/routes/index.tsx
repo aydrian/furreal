@@ -55,10 +55,10 @@ export default function Index() {
   const [searchParams] = useSearchParams();
   return (
     <main className="grid lg:grid-rows-2 gap-4 w-screen min-h-screen">
-      <section className="flex flex-col gap-4 justify-center bg-purple-400 p-4 sm:p-8">
+      <section className="flex flex-col gap-4 justify-center bg-gray-400 p-4 sm:p-8">
         <div className="max-w-2xl mx-auto">
-          <h1>FurReal</h1>
-          <h2 className="m-0 text-center text-white">
+          <h1 className="text-6xl font-bold text-center">FurReal</h1>
+          <h2 className="m-0 text-center text-white font-semibold text-lg mb-2">
             A Daily Picture App for Pets
           </h2>
           <p className="text-center text-white mb-0 mx-auto sm:w-3/4">
@@ -88,7 +88,7 @@ export default function Index() {
       </section>
       <section className="flex flex-col lg:justify-center bg-white p-4 sm:p-8">
         <div className="lg:max-w-xl mx-auto">
-          <h3 className="font-bold">Login</h3>
+          <h3 className="font-bold text-xl mb-2">Login</h3>
           <Form method="post" className="grid gap-4">
             <input
               type="hidden"
