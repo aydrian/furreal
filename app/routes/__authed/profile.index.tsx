@@ -30,6 +30,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     caption: null,
     location: null,
     imgData: Buffer.from(""),
+    coords: [],
     userId
   };
   dates.forEach((date) => {
@@ -77,14 +78,14 @@ export default function Profile() {
             </div>
           </section>
         ) : null}
-        <section>
-          <Form method="post" action="/logout" className="grid">
-            <button type="submit" className="text-white bg-red-500">
-              Log Out
-            </button>
-          </Form>
-        </section>
       </main>
+      <footer className="fixed bottom-0 p-4 w-full z-30">
+        <Form method="post" action="/logout" className="grid">
+          <button type="submit" className="text-white bg-red-500">
+            Log Out
+          </button>
+        </Form>
+      </footer>
     </>
   );
 }
