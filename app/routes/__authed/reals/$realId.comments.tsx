@@ -2,7 +2,10 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, Response } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { formatRelative } from "date-fns";
-import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowSmallLeftIcon,
+  PaperAirplaneIcon
+} from "@heroicons/react/24/solid";
 import invariant from "tiny-invariant";
 
 import { db } from "~/utils/db.server";
@@ -10,6 +13,7 @@ import { getUserId } from "~/utils/session.server";
 
 import { BufferImage } from "~/components/buffer-image";
 import { UserCircle } from "~/components/user-circle";
+import { LocationTag } from "~/components/location-tag";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const { realId } = params;
@@ -90,26 +94,32 @@ export default function RealComments() {
             <ArrowSmallLeftIcon className="h-6 w-6 text-black" />
           </Link>
           <div className="flex flex-col place-content-center text-center">
-            <h1 className="font-semibold">
+            <h1 className="font-bold">
               {selfOwned ? "My" : `${real.User.username}'s`} FurReal
             </h1>
-            <h2 className="text-grey-600">
+            <h2 className="text-sm text-gray-600">
               {formatRelative(new Date(real.createdAt), new Date())}
             </h2>
           </div>
           <div className="w-6"></div>
         </div>
       </header>
-      <main>
+      <main className="p-2">
         <section className="flex flex-col place-items-center">
           <BufferImage
             buffer={real.imgData}
             className="rounded-2xl aspect-square w-1/3"
           />
-          <p>{real.caption}</p>
+          <p className="font-semibold">{real.caption}</p>{" "}
+          {real.location ? (
+            <LocationTag
+              location={real.location}
+              className="text-white bg-gray-800 rounded-full font-semibold text-sm"
+            />
+          ) : null}
         </section>
         <section>
-          <hr />
+          <hr className="m-4" />
           {real.Comments && real.Comments.length > 0 ? (
             <ul>
               {real.Comments.map((comment) => (
@@ -117,7 +127,7 @@ export default function RealComments() {
               ))}
             </ul>
           ) : (
-            <div>Be the first to comment!</div>
+            <p className="text-center">Be the first to comment!</p>
           )}
         </section>
       </main>
@@ -125,7 +135,8 @@ export default function RealComments() {
         <Form method="post" className="flex">
           <input type="text" name="comment" className="flex-grow" />
           <button type="submit" name="intent" value="addComment">
-            Add
+            <PaperAirplaneIcon className="text-black w-6 h-6" />
+            <span className="sr-only">Add</span>
           </button>
         </Form>
       </footer>

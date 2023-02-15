@@ -10,7 +10,7 @@ import {
 import invariant from "tiny-invariant";
 import { formatRelative } from "date-fns";
 import { EyeSlashIcon, UsersIcon } from "@heroicons/react/24/solid";
-import { HeartIcon } from "@heroicons/react/24/solid";
+import { ChatBubbleLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
 
 import { getUserId } from "~/utils/session.server";
 
@@ -88,13 +88,15 @@ export default function Feed() {
       <main className="p-2">
         {currentReal ? (
           <>
-            <section className="flex flex-col place-items-center">
-              <BufferImage
-                buffer={currentReal.imgData}
-                className="rounded-2xl aspect-square w-1/3"
-              />
-              <p>{currentReal.caption}</p>
-              <p>
+            <section className="flex flex-col place-items-center mb-4">
+              <Link to={`/reals/${currentReal.id}/comments`}>
+                <BufferImage
+                  buffer={currentReal.imgData}
+                  className="rounded-2xl aspect-square w-1/3 m-auto"
+                />
+              </Link>
+              <p className="font-bold">{currentReal.caption}</p>
+              <p className="text-sm text-gray-600">
                 {currentReal.location} &#x2022;{" "}
                 {formatRelative(new Date(currentReal.createdAt), new Date())}
               </p>
@@ -163,11 +165,11 @@ function FriendReal({ friendReal }) {
     <li>
       <fetcher.Form method="post" replace>
         <input type="hidden" name="realId" value={friendReal.id} />
-        <div className="flex align-middle">
+        <div className="flex align-middle gap-2">
           <UserCircle user={friendReal.User} className="w-8 h-8" />
           <div className="flex flex-col">
-            <h3>{friendReal.User.username}</h3>
-            <p>
+            <h3 className="font-bold">{friendReal.User.username}</h3>
+            <p className="text-sm text-gray-600">
               {friendReal.location} &#x2022;{" "}
               {formatRelative(new Date(friendReal.createdAt), new Date())}
             </p>
@@ -178,7 +180,11 @@ function FriendReal({ friendReal }) {
             buffer={friendReal.imgData}
             className="rounded-2xl aspect-square w-full"
           />
-          <div className="absolute z-10 bottom-2 right-4">
+          <div className="absolute z-10 bottom-2 right-4 flex flex-col gap-2">
+            <Link to={`/reals/${friendReal.id}/comments`}>
+              <ChatBubbleLeftIcon className="h-12 w-12 text-white drop-shadow-md outline-1 outline-gray-900" />
+              <span className="sr-only">Comments</span>
+            </Link>
             <button
               type="submit"
               name="intent"
@@ -188,7 +194,7 @@ function FriendReal({ friendReal }) {
               className="p-0 m-0"
             >
               <HeartIcon
-                className={`h-12 w-12  drop-shadow-md ${
+                className={`h-12 w-12 drop-shadow-md outline-1 outline-gray-900 ${
                   (liked || isLiking) && !isDisliking
                     ? "text-pink-600"
                     : "text-white"
@@ -200,7 +206,14 @@ function FriendReal({ friendReal }) {
             </button>
           </div>
         </div>
-        {friendReal.caption ? <p>{friendReal.caption}</p> : null}
+        {friendReal.caption ? (
+          <p className="font-semibold">{friendReal.caption}</p>
+        ) : null}
+        <Link to={`/reals/${friendReal.id}/comments`} className="text-gray-600">
+          {friendReal._count.Comments > 0
+            ? `View all ${friendReal._count.Comments} comments`
+            : "Add a comment..."}
+        </Link>
       </fetcher.Form>
     </li>
   );

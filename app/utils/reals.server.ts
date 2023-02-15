@@ -49,7 +49,10 @@ export const getCurrentFriendReals = async (
   const friendReals = await db.real.findMany({
     include: {
       User: { select: { id: true, username: true } },
-      Reaction: { select: { type: true }, where: { userId } }
+      Reaction: { select: { type: true }, where: { userId } },
+      _count: {
+        select: { Comments: true }
+      }
     },
     where: {
       createdAt: {
