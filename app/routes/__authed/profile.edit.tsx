@@ -45,7 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   await updateUserProfile(userId, formData as UserProfile);
 
-  return redirect("../");
+  return redirect("/profile");
 };
 
 export default function EditProfile() {
@@ -55,7 +55,7 @@ export default function EditProfile() {
     <>
       <header className="bg-white sticky top-0 p-2">
         <div className="flex justify-between">
-          <Link to="../">Cancel</Link>
+          <Link to="/profile">Cancel</Link>
           <h1>Edit Profile</h1>
           <div>
             <button

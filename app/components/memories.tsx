@@ -13,7 +13,7 @@ interface memoryProps {
 
 export const Memories: React.FC<memoriesProps> = ({ memories }) => {
   return (
-    <ul className="grid grid-cols-7">
+    <ul className="grid grid-cols-7 gap-1">
       {memories.map((memory) => (
         <Memory key={memory.id} memory={memory} />
       ))}
