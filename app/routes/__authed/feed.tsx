@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Link,
@@ -40,6 +40,10 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return json({ user, friendReals });
 };
+
+export const meta: MetaFunction = () => ({
+  title: "FurReal: Feed"
+});
 
 export const action = async ({ request }: ActionArgs) => {
   const userId = await getUserId(request);

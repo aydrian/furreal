@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, Response } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { formatRelative } from "date-fns";
@@ -58,6 +58,13 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   } catch (err) {
     throw new Response("Real not found.", { status: 404 });
   }
+};
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const { real, selfOwned } = data;
+  return {
+    title: `FurReal: ${selfOwned ? "My" : `${real.User.username}'s`} FurReal`
+  };
 };
 
 export const action = async ({ params, request }: ActionArgs) => {

@@ -1,5 +1,5 @@
-import type { LoaderArgs } from "@remix-run/node";
-import { Prisma, Real } from "@prisma/client";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import { Real } from "@prisma/client";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -42,6 +42,10 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return json({ user, memories });
 };
+
+export const meta: MetaFunction = () => ({
+  title: "FurReal: Profile"
+});
 
 export default function Profile() {
   const { user, memories } = useLoaderData<typeof loader>();

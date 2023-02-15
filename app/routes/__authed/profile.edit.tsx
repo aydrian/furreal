@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderArgs } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import type { ActionData, UserProfile } from "~/utils/types.server";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
@@ -19,6 +19,10 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return json({ user });
 };
+
+export const meta: MetaFunction = () => ({
+  title: "FurReal: Edit Profile"
+});
 
 const schema = Z.object({
   fullName: Z.string({ required_error: "Name is required" }),
