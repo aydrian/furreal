@@ -83,7 +83,38 @@ export default function SignUp() {
   const actionData = useActionData() as ActionData<ActionInput>;
   const [searchParams] = useSearchParams();
   return (
-    <main>
+    <main className="grid lg:grid-rows-2 gap-4 w-screen min-h-screen">
+      <section className="flex flex-col gap-4 justify-center bg-gray-400 p-4 sm:p-8">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-6xl font-bold text-center">FurReal</h1>
+          <h2 className="m-0 text-center text-white font-semibold text-lg mb-2">
+            A Daily Picture App for Pets
+          </h2>
+          <p className="text-center text-white mb-0 mx-auto sm:w-3/4">
+            Based on the social media app, BeReal.
+          </p>
+          <p className="text-center text-sm text-white mb-0">
+            A{" "}
+            <a
+              className="text-inherit"
+              href="https://www.cockroachlabs.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Cockroach Labs
+            </a>{" "}
+            Demo by{" "}
+            <a
+              className="text-inherit"
+              href="https://twitter.com/itsaydrian"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Aydrian Howard
+            </a>
+          </p>
+        </div>
+      </section>
       <section className="flex flex-col lg:justify-center bg-white p-4 sm:p-8">
         <div className="lg:max-w-xl mx-auto">
           <h3 className="font-bold text-xl mb-2">Sign up</h3>

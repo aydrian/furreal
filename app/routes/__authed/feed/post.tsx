@@ -1,24 +1,29 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import type { ActionData } from "~/utils/types.server";
 import { json, redirect } from "@remix-run/node";
 import { useCallback, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { Form, useActionData } from "@remix-run/react";
 import * as Z from "zod";
-import invariant from "tiny-invariant";
 import {
   ArrowPathIcon,
   PaperAirplaneIcon,
   XCircleIcon
 } from "@heroicons/react/24/solid";
 
+import { LocationTag } from "~/components/location-tag";
 import { Modal } from "~/components/modal";
 import { useGeoPosition } from "~/hooks/useGeoPosition";
 
 import { validateAction } from "~/utils/utils";
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 import { createReal } from "~/utils/reals.server";
-import { LocationTag } from "~/components/location-tag";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  await requireUserId(request);
+
+  return null;
+};
 
 const schema = Z.object({
   caption: Z.string(),
@@ -30,9 +35,8 @@ const schema = Z.object({
 
 type ActionInput = Z.TypeOf<typeof schema>;
 
-export const action: ActionFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should be a string.");
+export const action = async ({ request }: ActionArgs) => {
+  const userId = await requireUserId(request);
 
   const { formData, errors } = await validateAction<ActionInput>({
     request,

@@ -4,13 +4,12 @@ import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 import { UserStack, UserTile } from "~/components/user-stack";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should not be null");
+  const userId = await requireUserId(request);
 
   const friendships = await db.friendship.findMany({
     select: {
@@ -23,8 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should not be null");
+  const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const intent = formData.get("intent");

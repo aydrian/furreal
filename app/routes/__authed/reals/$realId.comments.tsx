@@ -9,16 +9,15 @@ import {
 import invariant from "tiny-invariant";
 
 import { db } from "~/utils/db.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 
 import { BufferImage } from "~/components/buffer-image";
 import { UserCircle } from "~/components/user-circle";
 import { LocationTag } from "~/components/location-tag";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
+  const userId = await requireUserId(request);
   const { realId } = params;
-  const userId = await getUserId(request);
-  invariant(typeof userId === "string", "User ID should be a string.");
 
   try {
     const real = await db.real.findUniqueOrThrow({
@@ -68,10 +67,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export const action = async ({ params, request }: ActionArgs) => {
+  const userId = await requireUserId(request);
   const { realId } = params;
   invariant(typeof realId === "string", "Real ID should be a string.");
-  const userId = await getUserId(request);
-  invariant(typeof userId === "string", "User ID should be a string.");
 
   const formData = Object.fromEntries(await request.formData());
 
@@ -151,7 +149,7 @@ export default function RealComments() {
   );
 }
 
-function Comment({ comment }) {
+function Comment({ comment }: props) {
   return (
     <li className="flex gap-3">
       <UserCircle user={comment.User} className="w-8 h-8" />

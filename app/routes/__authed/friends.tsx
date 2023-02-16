@@ -1,19 +1,25 @@
-import type { ActionFunction, MetaFunction } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useActionData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { ArrowSmallRightIcon } from "@heroicons/react/24/solid";
 
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 import { UserCombobox } from "../resources/users";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  await requireUserId(request);
+
+  return null;
+};
 
 export const meta: MetaFunction = () => ({
   title: "FurReal: Friends"
 });
 
-export const action: ActionFunction = async ({ request }) => {
-  const userId = await getUserId(request);
+export const action = async ({ request }: ActionArgs) => {
+  const userId = await requireUserId(request);
   invariant(userId, "User ID should not be null");
   const formData = Object.fromEntries(await request.formData());
 

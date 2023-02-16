@@ -8,13 +8,12 @@ import * as Z from "zod";
 import { FormField } from "~/components/form-field";
 import { UserCircle } from "~/components/user-circle";
 
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 import { getUserProfile, updateUserProfile } from "~/utils/users.server";
 import { validateAction } from "~/utils/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should be a string.");
+  const userId = await requireUserId(request);
   const user = await getUserProfile(userId);
 
   return json({ user });
@@ -35,8 +34,7 @@ const schema = Z.object({
 type ActionInput = Z.TypeOf<typeof schema>;
 
 export const action: ActionFunction = async ({ request }) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should be a string.");
+  const userId = await requireUserId(request);
 
   const { formData, errors } = await validateAction<ActionInput>({
     request,

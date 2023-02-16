@@ -2,19 +2,17 @@ import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { Real } from "@prisma/client";
 import { json } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
 import { eachDayOfInterval, isSameDay, subDays } from "date-fns";
 import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid";
 
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 import { getUserProfile } from "~/utils/users.server";
 
 import { UserCircle } from "~/components/user-circle";
 import { Memories } from "~/components/memories";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should be a string.");
+  const userId = await requireUserId(request);
 
   const user = await getUserProfile(userId);
   const Reals = user?.Reals || [];

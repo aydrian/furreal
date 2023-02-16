@@ -7,12 +7,11 @@ import {
   useLoaderData,
   useNavigate
 } from "@remix-run/react";
-import invariant from "tiny-invariant";
 import { formatRelative } from "date-fns";
 import { EyeSlashIcon, UsersIcon } from "@heroicons/react/24/solid";
 import { ChatBubbleLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
 
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 
 import { BufferImage } from "~/components/buffer-image";
 import { UserCircle } from "~/components/user-circle";
@@ -25,9 +24,7 @@ import { db } from "~/utils/db.server";
 import { ReactionType } from "@prisma/client";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should not be null");
-
+  const userId = await requireUserId(request);
   const user = await getUserFeed(userId);
 
   if (user?.Reals.length === 0) {
@@ -46,8 +43,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const action = async ({ request }: ActionArgs) => {
-  const userId = await getUserId(request);
-  invariant(userId, "User ID should be a string.");
+  const userId = await requireUserId(request);
 
   const formData = Object.fromEntries(await request.formData());
 
