@@ -10,4 +10,8 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "api/index.js",
   // publicPath: "/build/",
+  future: {
+    unstable_postcss: true,
+    unstable_tailwind: true
+  }
 };
