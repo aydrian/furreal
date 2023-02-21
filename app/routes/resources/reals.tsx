@@ -1,9 +1,9 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import type { ActionData } from "~/utils/types.server";
+import { useCallback, useState, useRef } from "react";
 import { json, redirect } from "@remix-run/node";
-import { useCallback, useRef, useState } from "react";
-import Webcam from "react-webcam";
 import { Form, useActionData } from "@remix-run/react";
+import Webcam from "react-webcam";
 import * as Z from "zod";
 import {
   ArrowPathIcon,
@@ -11,19 +11,13 @@ import {
   XCircleIcon
 } from "@heroicons/react/24/solid";
 
+import { requireUserId } from "~/utils/session.server";
 import { LocationTag } from "~/components/location-tag";
 import { Modal } from "~/components/modal";
 import { useGeoPosition } from "~/hooks/useGeoPosition";
 
 import { validateAction } from "~/utils/utils";
-import { requireUserId } from "~/utils/session.server";
 import { createReal } from "~/utils/reals.server";
-
-export const loader = async ({ request }: LoaderArgs) => {
-  await requireUserId(request);
-
-  return null;
-};
 
 const schema = Z.object({
   caption: Z.string(),
@@ -35,7 +29,7 @@ const schema = Z.object({
 
 type ActionInput = Z.TypeOf<typeof schema>;
 
-export const action = async ({ request }: ActionArgs) => {
+export async function action({ request }: ActionArgs) {
   const userId = await requireUserId(request);
 
   const { formData, errors } = await validateAction<ActionInput>({
@@ -68,9 +62,14 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   return redirect("/feed");
+}
+
+type props = {
+  isOpen: boolean;
+  handleClose: Function;
 };
 
-export default function Post() {
+export function RealCamera({ isOpen, handleClose }: props) {
   const [img, setImg] = useState<string | null>(null);
   const { status, position, location, error } = useGeoPosition();
   const [facingMode, setFacingMode] = useState("user");
@@ -97,7 +96,7 @@ export default function Post() {
   }, []);
 
   return (
-    <Modal isOpen={true}>
+    <Modal isOpen={isOpen} handleClose={handleClose}>
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl text-center text-white font-bold">FurReal</h1>
         {img === null ? (
@@ -146,6 +145,7 @@ export default function Post() {
             </div>
 
             <Form
+              action="/resources/reals"
               method="post"
               className="flex flex-col place-items-center gap-2"
             >

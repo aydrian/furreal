@@ -6,13 +6,15 @@ interface props {
   isOpen: boolean;
   ariaLabel?: string;
   className?: string;
+  handleClose: Function;
 }
 
 export const Modal: React.FC<props> = ({
   children,
   isOpen,
   ariaLabel,
-  className
+  className,
+  handleClose
 }) => {
   const navigate = useNavigate();
   if (!isOpen) return null;
@@ -24,7 +26,7 @@ export const Modal: React.FC<props> = ({
         aria-labelledby={ariaLabel ?? "modal-title"}
         role="dialog"
         aria-modal="true"
-        onClick={() => navigate("/feed")}
+        onClick={handleClose}
       ></div>
       <div className="fixed inset-0 pointer-events-none flex justify-center items-center max-h-screen overflow-scroll z-50">
         <div

@@ -1,12 +1,7 @@
 import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
+import { useState } from "react";
 import { json } from "@remix-run/node";
-import {
-  Link,
-  Outlet,
-  useFetcher,
-  useLoaderData,
-  useNavigate
-} from "@remix-run/react";
+import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import { formatRelative } from "date-fns";
 import { EyeSlashIcon, UsersIcon } from "@heroicons/react/24/solid";
 import { ChatBubbleLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
@@ -15,6 +10,7 @@ import { requireUserId } from "~/utils/session.server";
 
 import { BufferImage } from "~/components/buffer-image";
 import { UserCircle } from "~/components/user-circle";
+import { RealCamera } from "../resources/reals";
 import { getUserFeed } from "~/utils/users.server";
 import {
   getCurrentFriendReals,
@@ -65,13 +61,19 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Feed() {
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const { user, friendReals } = useLoaderData<typeof loader>();
   const currentReal = user?.Reals[0];
   const navigate = useNavigate();
 
   return (
     <>
-      <Outlet />
+      <RealCamera
+        isOpen={isCameraOpen}
+        handleClose={() => {
+          setIsCameraOpen(false);
+        }}
+      />
       <header className="bg-white sticky top-0 p-2">
         <div className="flex justify-between">
           <Link to="/friends/" prefetch="intent">
@@ -138,7 +140,7 @@ export default function Feed() {
             <button
               type="button"
               className="text-black font-medium bg-white mt-4"
-              onClick={() => navigate(`post`)}
+              onClick={() => setIsCameraOpen(true)}
             >
               Post a FurReal
             </button>

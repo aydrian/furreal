@@ -1,5 +1,6 @@
 import type { Real } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 
 import { BufferImage } from "./buffer-image";
 
@@ -24,12 +25,21 @@ export const Memories: React.FC<memoriesProps> = ({ memories }) => {
 const Memory: React.FC<memoryProps> = ({ memory }) => {
   return (
     <li className="flex place-content-center place-items-center aspect-square w-full">
-      <div className="absolute z-10 font-bold text-lg text-white">
-        {new Date(memory.createdAt).getDate()}
-      </div>
       {memory.imgData.data.length > 0 ? (
-        <BufferImage buffer={memory.imgData} className="rounded-lg" />
-      ) : null}
+        <Link
+          to={`/reals/${memory.id}`}
+          className="flex place-content-center place-items-center"
+        >
+          <div className="absolute z-10 font-bold text-lg text-white">
+            {new Date(memory.createdAt).getDate()}
+          </div>
+          <BufferImage buffer={memory.imgData} className="rounded-lg" />
+        </Link>
+      ) : (
+        <div className="absolute z-10 font-bold text-lg text-white">
+          {new Date(memory.createdAt).getDate()}
+        </div>
+      )}
     </li>
   );
 };

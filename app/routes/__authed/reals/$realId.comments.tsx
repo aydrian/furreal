@@ -99,7 +99,7 @@ export default function RealComments() {
   const isAdding =
     navigation.state === "submitting" &&
     navigation.formData.get("intent") === "addComment";
-  console.log(`isAdding? ${isAdding}`);
+  console.log(`isAdding? ${isAdding}, nav state: ${navigation.state}`);
 
   let formRef = useRef<HTMLFormElement | null>(null);
 
